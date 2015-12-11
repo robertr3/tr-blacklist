@@ -26,6 +26,26 @@
         android:id="@+id/eventsButton"
         android:layout_below="@+id/textWelcome"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="34dp" />
+        android:layout_toLeftOf="@+id/createEventsButton"
+        android:layout_marginTop="25dp"
+        android:onClick="findEvents" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_events"
+        android:id="@+id/createEventsButton"
+        android:layout_below="@+id/textWelcome"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="25dp"
+        android:onClick="createEvents" />
+
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/expandableListView"
+        android:layout_below="@+id/eventsButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
