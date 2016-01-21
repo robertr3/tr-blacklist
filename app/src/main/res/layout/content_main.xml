@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/find_events"
-        android:id="@+id/eventsButton"
+        android:id="@+id/findEventsButton"
         android:layout_below="@+id/textWelcome"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/createEventsButton"
