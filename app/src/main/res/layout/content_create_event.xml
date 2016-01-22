@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dip" >
+
+        <!-- View Title Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:text="@string/registerEvent_title"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <!-- Name Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/name" />
+        <!-- Name TextField -->
+
+        <EditText
+            android:id="@+id/registerEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:hint="Enter Name for Event"/>
+
+        <!-- Type Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/type" />
+        <!-- Type TextField -->
+
+        <EditText
+            android:id="@+id/registerType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Choose type of Event" />
+
+        <!-- Topic1 Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:text="@string/topic" />
+        <!-- Topic1 TextField -->
+
+        <EditText
+            android:id="@+id/chooseTopic1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="choose a Topic" />
+
+        <!-- timeStart Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:text="@string/timeStart" />
+        <!-- timeStart TextField -->
+
+        <EditText
+            android:id="@+id/choosetimeS"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="choose a starting Time" />
+
+        <!-- timeEnd Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:text="@string/timeEnd" />
+        <!-- timeEnd TextField -->
+
+        <EditText
+            android:id="@+id/choosetimeE"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="choose ending Time" />
+
+        <!-- location Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:text="@string/location" />
+        <!-- location TextField -->
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="choose a Location" />
+
+        <!-- privacy Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
+            android:text="@string/privacy" />
+        <!-- location Switch -->
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Switch"
+            android:id="@+id/privacy" />
+
+        <!-- Error message -->
+
+        <TextView
+            android:id="@+id/registerEvent_error"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dip"
+            android:textColor="#e30000"
+            android:textStyle="bold" />
+
+
+
+        <Button
+            android:id="@+id/btnRegisterEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#ff6347"
+            android:onClick="registerEvent"
+            android:text="@string/btnRegisterEvent"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+</ScrollView>

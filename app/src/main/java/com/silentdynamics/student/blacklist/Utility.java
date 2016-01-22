@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
  *Created by Student on 15.01.2016.
  */
 public class Utility {
+    // Usernameobject for Events
+    private static String username;
     private static Pattern pattern;
     private static Matcher matcher;
     //Email Pattern
@@ -21,6 +23,7 @@ public class Utility {
      * @return true for Valid Email and false for Invalid Email
      */
     public static boolean validate(String email) {
+        username = email;
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(email);
         return matcher.matches();
@@ -34,5 +37,12 @@ public class Utility {
      */
     public static boolean isNotNull(String txt){
         return txt!=null && txt.trim().length()>0 ? true: false;
+    }
+
+    /**
+     * Getter for username
+     */
+    public static String getUsername(){
+        return username;
     }
 }

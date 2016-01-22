@@ -1,6 +1,7 @@
 package com.silentdynamics.student.blacklist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -70,5 +71,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.e("Connect", "Couldn't connect");
         }
+    }
+
+    /**
+     * Method gets triggered when Register button is clicked
+     *
+     * @param view
+     */
+    public void navigatetoCreateEventActivity(View view){
+        Intent createEventIntent = new Intent(getApplicationContext(),CreateEventActivity.class);
+        createEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(createEventIntent);
     }
 }

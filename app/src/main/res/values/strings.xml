@@ -76,4 +76,15 @@
     <string name="pwd">Password</string>
     <string name="btnRegister">Register</string>
     <string name="servicePort">141.76.66.73:8080</string>
+    <string name="title_activity_create_event">CreateEventActivity</string>
+
+    <!--Strings related to event registration -->
+    <string name="registerEvent_title">Create Event</string>
+    <string name="type">Type</string>
+    <string name="topic">Topic1</string>
+    <string name="timeStart">Beginns</string>
+    <string name="timeEnd">Ends</string>
+    <string name="location">Location</string>
+    <string name="privacy">Privacy</string>
+    <string name="btnRegisterEvent">Create</string>
 </resources>
