@@ -64,4 +64,27 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+    <!--Strings related to user registration -->
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="register_title">Register</string>
+    <string name="login_title">Login</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="pwd">Password</string>
+    <string name="btnRegister">Register</string>
+    <string name="servicePort">141.76.66.73:8080</string>
+    <string name="title_activity_create_event">CreateEventActivity</string>
+
+    <!--Strings related to event registration -->
+    <string name="registerEvent_title">Create Event</string>
+    <string name="type">Type</string>
+    <string name="topic">Topic1</string>
+    <string name="timeStart">Beginns</string>
+    <string name="timeEnd">Ends</string>
+    <string name="location">Location</string>
+    <string name="privacy">Privacy</string>
+    <string name="btnRegisterEvent">Create</string>
 </resources>

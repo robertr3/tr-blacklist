@@ -1,6 +1,7 @@
 package com.silentdynamics.student.blacklist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -8,9 +9,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setAction("Action", null).show();
             }
         });
-        eventsButton = (Button) findViewById(R.id.eventsButton);
+        eventsButton = (Button) findViewById(R.id.findEventsButton);
         eventsButton.setOnClickListener(this);
     }
 
@@ -67,7 +69,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (networkInfo != null && networkInfo.isConnected()) {
             new DownloadDataTask().execute(url);
         } else {
-            // display error
+            Log.e("Connect", "Couldn't connect");
         }
+    }
+
+    /**
+     * Method gets triggered when Register button is clicked
+     *
+     * @param view
+     */
+    public void navigatetoCreateEventActivity(View view){
+        Intent createEventIntent = new Intent(getApplicationContext(),CreateEventActivity.class);
+        createEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(createEventIntent);
     }
 }
