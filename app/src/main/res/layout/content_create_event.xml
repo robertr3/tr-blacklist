@@ -20,22 +20,38 @@
             android:textStyle="bold" />
         <!-- Name Label -->
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
         <TextView
+            android:id="@+id/textView1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:text="@string/name" />
         <!-- Name TextField -->
 
         <EditText
             android:id="@+id/registerEvent"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:hint="Enter Name for Event"/>
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_below="@+id/textView1"
+            android:hint="Enter Name for Event"/>
 
         <!-- Type Label -->
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/registerEvent"
+            android:layout_below="@+id/registerEvent"
             android:text="@string/type" />
         <!-- Type TextField -->
 
@@ -43,13 +59,18 @@
             android:id="@+id/registerType"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_below="@+id/textView2"
             android:hint="Choose type of Event" />
 
         <!-- Topic1 Label -->
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/registerType"
+            android:layout_below="@+id/registerType"
             android:layout_marginTop="15dip"
             android:text="@string/topic" />
         <!-- Topic1 TextField -->
@@ -58,14 +79,19 @@
             android:id="@+id/chooseTopic1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_below="@+id/textView3"
             android:hint="choose a Topic" />
 
         <!-- timeStart Label -->
 
         <TextView
+            android:id="@+id/textView4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:layout_alignLeft="@+id/chooseTopic1"
+            android:layout_below="@+id/chooseTopic1"
             android:text="@string/timeStart" />
         <!-- timeStart TextField -->
 
@@ -73,14 +99,19 @@
             android:id="@+id/choosetimeS"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView4"
+            android:layout_below="@+id/textView4"
             android:hint="choose a starting Time" />
 
         <!-- timeEnd Label -->
 
         <TextView
+            android:id="@+id/textView5"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:layout_alignLeft="@+id/choosetimeS"
+            android:layout_below="@+id/choosetimeS"
             android:text="@string/timeEnd" />
         <!-- timeEnd TextField -->
 
@@ -88,14 +119,19 @@
             android:id="@+id/choosetimeE"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView5"
+            android:layout_below="@+id/textView5"
             android:hint="choose ending Time" />
 
         <!-- location Label -->
 
         <TextView
+            android:id="@+id/textView6"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:layout_alignLeft="@+id/choosetimeE"
+            android:layout_below="@+id/choosetimeE"
             android:text="@string/location" />
         <!-- location TextField -->
 
@@ -103,20 +139,27 @@
             android:id="@+id/location"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView6"
+            android:layout_below="@+id/textView6"
             android:hint="choose a Location" />
 
         <!-- privacy Label -->
 
         <TextView
+            android:id="@+id/textView7"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:layout_alignLeft="@+id/location"
+            android:layout_below="@+id/location"
             android:text="@string/privacy" />
         <!-- location Switch -->
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView7"
+            android:layout_below="@+id/textView7"
             android:text="New Switch"
             android:id="@+id/privacy" />
 
@@ -126,6 +169,8 @@
             android:id="@+id/registerEvent_error"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/privacy"
+            android:layout_below="@+id/privacy"
             android:gravity="center"
             android:padding="10dip"
             android:textColor="#e30000"
@@ -135,14 +180,38 @@
 
         <Button
             android:id="@+id/btnRegisterEvent"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
+            android:layout_alignLeft="@+id/registerEvent_error"
+            android:layout_below="@+id/registerEvent_error"
             android:background="#ff6347"
             android:onClick="registerEvent"
             android:text="@string/btnRegisterEvent"
             android:textColor="#fff" />
 
+            <Button
+                android:id="@+id/btnSaveEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:layout_toRightOf="@+id/btnRegisterEvent"
+                android:layout_below="@+id/registerEvent_error"
+                android:background="#ff6347"
+                android:onClick="addNewEvent"
+                android:text="@string/btnSaveEvent"
+                android:textColor="#fff" />
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registerEvent_error"
+            android:layout_toRightOf="@+id/btnSaveEvent"
+            android:layout_marginTop="20dp"
+            android:text="@string/cancel"
+            android:onClick="cancelAddEvent" />
+
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>

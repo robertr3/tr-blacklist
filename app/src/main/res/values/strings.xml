@@ -87,4 +87,7 @@
     <string name="location">Location</string>
     <string name="privacy">Privacy</string>
     <string name="btnRegisterEvent">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="btnSaveEvent">Save</string>
+    <string name="delete_events">Event löschen</string>
 </resources>

@@ -40,12 +40,30 @@
         android:layout_marginTop="25dp"
         android:onClick="navigatetoCreateEventActivity" />
 
-    <ExpandableListView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/expandableListView"
+        android:text="@string/delete_events"
+        android:id="@+id/deleteEventsButton"
         android:layout_below="@+id/findEventsButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginTop="25dp"
+        android:onClick="deleteFirstEvent" />
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/deleteEventsButton"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp">
+
+            <ListView
+                 android:id="@android:id/list"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true">
+             </ListView>
+    </RelativeLayout>
 </RelativeLayout>

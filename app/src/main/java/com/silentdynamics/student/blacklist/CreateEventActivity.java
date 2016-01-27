@@ -1,5 +1,6 @@
 package com.silentdynamics.student.blacklist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -38,6 +40,8 @@ public class CreateEventActivity extends AppCompatActivity {
     // Passwprd Edit View Object
     Switch privacyE;
     TextView errorMsg;
+
+    DBController controller = new DBController(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +100,20 @@ public class CreateEventActivity extends AppCompatActivity {
                 params.put("type", type);
                 // Put Http parameter topic1 with value of Password Edit View control
                 params.put("topic1", topic1);
-                params.put("timeStart", startTime);
+                params.put("timestart", startTime);
             if (Utility.isNotNull(endTime)){
-                params.put("timeEnd", endTime);
+                params.put("timeend", endTime);
             }
             else {
-                params.put("timeEnd", "not defiened");
+                params.put("timeend", "not defiened");
             }
                 params.put("location", location);
-                params.put("privacy", privacy);
+            if (privacy == true){
+                params.put("privacy", 1);
+            }
+            else {
+                params.put("privacy", 0);
+            }
                 params.put("username", username);
                 // Invoke RESTful Web Service with Http parameters
                 invokeWS(params);
@@ -124,7 +133,7 @@ public class CreateEventActivity extends AppCompatActivity {
     public void invokeWS(RequestParams params){
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://" + getResources().getString(R.string.servicePort) + "/blacklistService/register/doregister",params ,new AsyncHttpResponseHandler() {
+        client.get("http://" + getResources().getString(R.string.servicePort) + "/blacklistService/registerevent/doregisterevent",params ,new AsyncHttpResponseHandler() {
             // When the response returned by REST has Http response code '200'
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
@@ -171,5 +180,38 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
+    /**
+     * Called when Save button is clicked
+     * @param view
+     */
+    public void addNewEvent(View view) {
+        HashMap<String, String> queryValues = new HashMap<String, String>();
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, nameE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1E.getText().toString());
+        if (nameE.getText().toString() != null
+                && nameE.getText().toString().trim().length() != 0) {
+            controller.insertEvent(queryValues);
+            this.callHomeActivity(view);
+        } else {
+            Toast.makeText(getApplicationContext(), "Please enter Event name",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+    /**
+     * Navigate to Home Screen
+     * @param view
+     */
+    public void callHomeActivity(View view) {
+        Intent objIntent = new Intent(getApplicationContext(),
+                MainActivity.class);
+        startActivity(objIntent);
+    }
 
+    /**
+     * Called when Cancel button is clicked
+     * @param view
+     */
+    public void cancelAddEvent(View view) {
+        this.callHomeActivity(view);
+    }
 }
