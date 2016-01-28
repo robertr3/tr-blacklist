@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         if(eventList.size()!=0){
             //Set the Event Array list in ListView
-            ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "eventid","name"}, new int[] {R.id.eventId, R.id.eventName});
+            ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
             ListView myList=(ListView)findViewById(android.R.id.list);
             myList.setAdapter(adapter);
             //Display Sync status of SQLite DB
@@ -222,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         if(eventList.size()!=0){
             //Set the Event Array list in ListView
-            ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "eventid","name"}, new int[] {R.id.eventId, R.id.eventName});
+            ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
             ListView myList=(ListView)findViewById(android.R.id.list);
             myList.setAdapter(adapter);
             //Display Sync status of SQLite DB

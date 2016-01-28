@@ -59,6 +59,7 @@ public class DBController  extends SQLiteOpenHelper {
     public void deleteEvent() {
         SQLiteDatabase database = this.getWritableDatabase();
         database.isOpen();
+        Log.d(TAG, "insede deleteEvent");
         Cursor cursor = database.query(EventsContract.EventsEntry.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()){
             String rowId = cursor.getString(cursor.getColumnIndex(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID));
@@ -84,6 +85,7 @@ public class DBController  extends SQLiteOpenHelper {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID, cursor.getString(0));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, cursor.getString(1));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, cursor.getString(2));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
