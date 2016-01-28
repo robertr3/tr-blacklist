@@ -2,6 +2,7 @@ package com.silentdynamics.student.blacklist;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback {
+    private static final String TAG = FindEventsActivity.class.getSimpleName();
 
     private GoogleMap mMap;
 
@@ -18,6 +20,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
+        Log.d(TAG, "find Events open");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
