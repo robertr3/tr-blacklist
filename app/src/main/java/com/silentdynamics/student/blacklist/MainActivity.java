@@ -3,6 +3,7 @@ package com.silentdynamics.student.blacklist;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DBController controller = new DBController(this);
     //Progress Dialog Object
     ProgressDialog prgDialog;
-    private Button eventsButton;
+   // private Button eventsButton;
     private String url = "";
 
     @Override
@@ -58,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setAction("Action", null).show();
             }
         });
-        eventsButton = (Button) findViewById(R.id.findEventsButton);
-        eventsButton.setOnClickListener(this);
+        //eventsButton = (Button) findViewById(R.id.findEventsButton);
+        //eventsButton.setOnClickListener(this);
 
         /*
         *Eventlist related operations
@@ -89,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         prgDialog = new ProgressDialog(this);
         prgDialog.setMessage("Synching SQLite Data with Remote MySQL DB. Please wait...");
         prgDialog.setCancelable(false);
+
+        // register receiver
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+
+        BatteryLevelReceiver receiver = new BatteryLevelReceiver();
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -198,10 +205,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(createEventIntent);
     }
 
-    public void findEvents(View view){
-        Intent createEventIntent = new Intent(getApplicationContext(),FindEventsActivity.class);
-        createEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(createEventIntent);
+    public void navigateToFindEventsActivity(View view){
+        Log.d(TAG, "find Events");
+        Intent findEventIntent = new Intent(getApplicationContext(),FindEventsActivity.class);
+        findEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(findEventIntent);
     }
     public void deleteFirstEvent(View view){
         controller.deleteEvent();
