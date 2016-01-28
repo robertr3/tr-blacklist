@@ -17,7 +17,7 @@ import java.util.HashMap;
  * Created by Student on 27.01.2016.
  */
 public class DBController  extends SQLiteOpenHelper {
-
+    private static final String TAG = DBController.class.getSimpleName();
     public static final String DATABASE_NAME = "BlacklistEvents.db";
 
     public DBController(Context applicationcontext) {
@@ -60,10 +60,10 @@ public class DBController  extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         database.isOpen();
         Cursor cursor = database.query(EventsContract.EventsEntry.TABLE_NAME, null, null, null, null, null, null);
-
         if (cursor.moveToFirst()){
-            String rowId = cursor.getString(cursor.getColumnIndex(EventsContract.EventsEntry.COLUMN_NAME_NAME));
-            database.delete(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_NAME +
+            String rowId = cursor.getString(cursor.getColumnIndex(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID));
+            Log.d(TAG, "row: " + rowId);
+            database.delete(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID +
                     "=?",new String[]{rowId});
         }
         database.close();
