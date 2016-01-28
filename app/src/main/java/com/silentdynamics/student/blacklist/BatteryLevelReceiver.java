@@ -16,7 +16,28 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        //TODO: Get actual Battery Level
-        Log.d("Battery", "Battery Low");
+        Log.d("Battery", "onReceive");
+
+        if(intent.getAction().equals(Intent.ACTION_BATTERY_LOW)) {
+            Log.d("Battery", "Battery low");
+            Toast.makeText(context, "Battery low",Toast.LENGTH_SHORT).show();
+        }
+
+        if(intent.getAction().equals(Intent.ACTION_BATTERY_OKAY)) {
+            Log.d("Battery", "Battery okay");
+        }
+
+        if(intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
+            Log.d("Battery", "Battery power connected");
+            Toast.makeText(context, "Battery power conntected",Toast.LENGTH_SHORT).show();
+        }
+
+        if(intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED)) {
+            Log.d("Battery", "Battery power disconnected");
+        }
+
+        if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)) {
+            Log.d("Battery", "Battery changed");
+        }
     }
 }

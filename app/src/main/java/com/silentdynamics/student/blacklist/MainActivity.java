@@ -92,7 +92,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         prgDialog.setCancelable(false);
 
         // register receiver
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        filter.addAction(Intent.ACTION_BATTERY_LOW);
+        filter.addAction(Intent.ACTION_BATTERY_OKAY);
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
 
         BatteryLevelReceiver receiver = new BatteryLevelReceiver();
         registerReceiver(receiver, filter);
