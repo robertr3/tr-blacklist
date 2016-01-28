@@ -23,7 +23,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
 import java.util.Random;
+import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -35,6 +37,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LocationRequest mLocationRequest;
+
+    List<DummyContent.DummyItem> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,11 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+
+        // Get the dummy events
+        events = DummyContent.ITEMS;
+        Log.d(TAG, "1. " + events.get(0).topic);
+
         //
         // Fragments
         //
@@ -71,6 +80,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 return;
             }
 
+            // TODO get batterySaferMode true/false
             int random = new Random().nextInt(2);
             if(random == 0) {
                 // Create a new Fragment to be placed in the activity layout
@@ -127,8 +137,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            Log.d("Permission", "granted");
-
             location = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
 
@@ -194,8 +202,23 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        if(mMap != null) {
+            mMap.addMarker(options);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
+
+        for(DummyContent.DummyItem item : events) {
+            latLng = new LatLng(item.lat, item.lng);
+
+            MarkerOptions o = new MarkerOptions()
+                    .position(latLng)
+                    .title(item.content);
+
+            if(mMap != null) {
+                mMap.addMarker(o);
+            }
+        }
     }
 
     public void onConnectionSuspended(int i) {

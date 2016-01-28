@@ -3,8 +3,6 @@ package com.silentdynamics.student.blacklist;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.BatteryManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,7 +13,7 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
     boolean batteryLow = false;
     boolean isConnected = false;
-    boolean batteryOkay = true;
+    boolean batterySaferMode = false;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -53,17 +51,17 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         }
     }
 
-    public boolean getBatteryOkay (){
-        return batteryOkay;
+    public boolean getBatterySaferMode(){
+        return batterySaferMode;
     }
 
     void getBatteryStatus() {
         // if battery is okay or connected
         if(batteryLow == false || isConnected) {
-            batteryOkay = true;
+            batterySaferMode = false;
             return;
         }
         // if battery is low and not connected
-        batteryOkay = false;
+        batterySaferMode = true;
     }
 }

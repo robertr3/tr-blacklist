@@ -25,9 +25,9 @@ public class DummyContent {
 
     static {
         // Add 3 sample items.
-        addItem(new DummyItem("1", "Item 1"));
-        addItem(new DummyItem("2", "Item 2"));
-        addItem(new DummyItem("3", "Item 3"));
+        addItem(new DummyItem("1", "Item 1", "Fußball", 51.0389224, 13.7598763));
+        addItem(new DummyItem("2", "Item 2", "Fußball", 51.0431384, 13.7667263));
+        addItem(new DummyItem("3", "Item 3", "Politik", 51.0313414, 13.7766913));
     }
 
     private static void addItem(DummyItem item) {
@@ -41,10 +41,16 @@ public class DummyContent {
     public static class DummyItem {
         public String id;
         public String content;
+        public String topic;
+        public double lat;
+        public double lng;
 
-        public DummyItem(String id, String content) {
+        public DummyItem(String id, String content, String topic, double lat, double lng) {
             this.id = id;
             this.content = content;
+            this.topic = topic;
+            this.lat = lat;
+            this.lng = lng;
         }
 
         @Override
