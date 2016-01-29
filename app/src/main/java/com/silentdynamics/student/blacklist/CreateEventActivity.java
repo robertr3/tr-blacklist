@@ -90,6 +90,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Boolean privacy = privacyE.isChecked();
         // Get username
         String username = Utility.getUsername();
+        if (username == null){username = "TestUser";}
         // Instantiate Http Request Param Object
         RequestParams params = new RequestParams();
         // When Name Edit View, Email Edit View and Password Edit View have values other than Null
@@ -109,10 +110,10 @@ public class CreateEventActivity extends AppCompatActivity {
             }
                 params.put("location", location);
             if (privacy == true){
-                params.put("privacy", 1);
+                params.put("privacy", "true");
             }
             else {
-                params.put("privacy", 0);
+                params.put("privacy", "false");
             }
                 params.put("username", username);
                 // Invoke RESTful Web Service with Http parameters
@@ -187,7 +188,13 @@ public class CreateEventActivity extends AppCompatActivity {
     public void addNewEvent(View view) {
         HashMap<String, String> queryValues = new HashMap<String, String>();
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, nameE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, typeE.getText().toString());
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1E.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTimeE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTimeE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacyE.toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, Utility.getUsername());
         if (nameE.getText().toString() != null
                 && nameE.getText().toString().trim().length() != 0) {
             controller.insertEvent(queryValues);
