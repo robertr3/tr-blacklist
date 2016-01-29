@@ -10,6 +10,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,7 +33,7 @@ import java.util.Random;
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemSelectedListener {
     private static final String TAG = FindEventsActivity.class.getSimpleName();
 
     private GoogleMap mMap;
@@ -65,6 +70,16 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         // Get the dummy events
         events = DummyContent.ITEMS;
         Log.d(TAG, "1. " + events.get(0).topic);
+
+        // Create the spinner
+        Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.topics_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         //
         // Fragments
@@ -205,6 +220,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
         if(mMap != null) {
             mMap.addMarker(options);
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
 
@@ -217,6 +233,31 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             if(mMap != null) {
                 mMap.addMarker(o);
+            }
+        }
+    }
+
+    private void handleNewFilter(String filter) {
+
+        // if fragmant is a map
+        if(mMap != null) {
+            LatLng latLng;
+
+            // clear all Markers
+            mMap.clear();
+
+            // Add new ones according to filter
+            for (DummyContent.DummyItem item : events) {
+                if (item.topic.equals(filter)) {
+                    latLng = new LatLng(item.lat, item.lng);
+
+                    MarkerOptions o = new MarkerOptions()
+                            .position(latLng)
+                            .title(item.content);
+
+                    mMap.addMarker(o);
+
+                }
             }
         }
     }
@@ -264,6 +305,17 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+        handleNewFilter(parent.getItemAtPosition(position).toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 }
