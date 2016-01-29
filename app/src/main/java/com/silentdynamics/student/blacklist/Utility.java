@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  */
 public class Utility {
     // Usernameobject for Events
-    private static String username;
+    private static String username = "TestUser";
     private static Pattern pattern;
     private static Matcher matcher;
     //Email Pattern

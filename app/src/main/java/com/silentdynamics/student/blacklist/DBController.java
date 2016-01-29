@@ -29,7 +29,14 @@ public class DBController  extends SQLiteOpenHelper {
         String query;
         query = "CREATE TABLE " + EventsContract.EventsEntry.TABLE_NAME + " (" + EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID +
                 " INTEGER PRIMARY KEY," + EventsContract.EventsEntry.COLUMN_NAME_NAME + " TEXT," +
-                EventsContract.EventsEntry.COLUMN_NAME_TOPIC + " TEXT," + EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT)";
+                EventsContract.EventsEntry.COLUMN_NAME_TYPE + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_TOPIC + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_TIMESTART + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_TIMEEND + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_LOCATION + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_PRIVACY + " TINYINT," +
+                EventsContract.EventsEntry.COLUMN_NAME_USERNAME + " TEXT," +
+                EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT)";
         database.execSQL(query);
     }
     @Override
@@ -47,7 +54,13 @@ public class DBController  extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_NAME));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TYPE));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TOPIC));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_LOCATION));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY));
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_USERNAME));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_UPDATE, "no");
         database.insert(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_TOPIC, values);
         database.close();
@@ -59,6 +72,7 @@ public class DBController  extends SQLiteOpenHelper {
     public void deleteEvent() {
         SQLiteDatabase database = this.getWritableDatabase();
         database.isOpen();
+        Log.d(TAG, "insede deleteEvent");
         Cursor cursor = database.query(EventsContract.EventsEntry.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()){
             String rowId = cursor.getString(cursor.getColumnIndex(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID));
@@ -84,6 +98,13 @@ public class DBController  extends SQLiteOpenHelper {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID, cursor.getString(0));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, cursor.getString(1));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, cursor.getString(2));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, cursor.getString(3));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, cursor.getString(4));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, cursor.getString(5));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(6));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(7));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(8));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
