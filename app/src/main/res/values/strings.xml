@@ -55,9 +55,17 @@
 
     <!-- Array for topics -->
     <string-array name="topics_array">
+        <item>Kein Filter</item>
+        <item>Kein Filter</item>
         <item>Fußball</item>
         <item>Politik</item>
         <item>Studium</item>
+        <item>Krankheit</item>
+        <item>Urlaub</item>
+        <item>Kinder</item>
+        <item>Beziehungen</item>
+        <item>Probleme</item>
+        <item>Weltuntergang</item>
     </string-array>
 
 

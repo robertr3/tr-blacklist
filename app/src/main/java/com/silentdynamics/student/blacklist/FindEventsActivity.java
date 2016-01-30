@@ -1,6 +1,7 @@
 package com.silentdynamics.student.blacklist;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,12 +31,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.sql.Array;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemSelectedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemSelectedListener,
+        View.OnClickListener {
     private static final String TAG = FindEventsActivity.class.getSimpleName();
 
     private GoogleMap mMap;
@@ -43,7 +51,10 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LocationRequest mLocationRequest;
 
+    EventFragment listFragment;
+
     List<DummyContent.DummyItem> events;
+    Button[] btns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +89,50 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        if(spinner != null) {
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(this);
+        }
+
+        // Create the TagCloud
+        RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
+
+
+
+        //set the properties for button
+        /*for(DummyContent.DummyItem event : DummyContent.ITEMS) {
+            Button btnTag = new Button(this);
+            btnTag.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            btnTag.setText(event.topic);
+            btnTag.setId(tagID);
+            tagID++;
+
+            //add button to the layout
+            tagCloud.addView(btnTag);
+        }*/
+
+        String[] topics = getResources().getStringArray(R.array.topics_array);
+        btns = new Button[topics.length];
+
+        int tagID = 0;
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
+        for(Object t : topics) {
+            btns[tagID] = new Button(this);
+            btns[tagID].setId(tagID);
+            btns[tagID].setText(t.toString());
+            btns[tagID].setOnClickListener(this);
+            layout.addView(btns[tagID]);	//add button into the layout dynamically
+            tagID++;
+        }
+        layout.post(new Runnable() {	//post a Runnable that call reLayout to layout object
+            @Override
+            public void run() {
+                reLayout();
+            }
+        });
+
+
 
         //
         // Fragments
@@ -99,7 +152,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             int random = new Random().nextInt(2);
             if(random == 0) {
                 // Create a new Fragment to be placed in the activity layout
-                EventFragment listFragment = new EventFragment();
+                listFragment = new EventFragment();
 
                 // In case this activity was started with special instructions from an
                 // Intent, pass the Intent's extras to the fragment as arguments
@@ -248,7 +301,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             // Add new ones according to filter
             for (DummyContent.DummyItem item : events) {
-                if (item.topic.equals(filter)) {
+                if (item.topic.equals(filter) || filter.equals("Kein Filter")) {
                     latLng = new LatLng(item.lat, item.lng);
 
                     MarkerOptions o = new MarkerOptions()
@@ -259,6 +312,48 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
                 }
             }
+        }
+        // fragment is list
+        else {
+            listFragment.filter(filter);
+        }
+    }
+
+    // FIXME Erster Button wird übergangen
+    @TargetApi(17)
+    protected void reLayout() {
+        int totalWidth;
+        int curWidth;
+        int layoutPadX;
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
+        int w = layout.getMeasuredWidth();  //get width of current layout
+        totalWidth = 0;
+        //layoutPadX = layout.getPaddingLeft() + layout.getPaddingRight();
+        //w = w - layoutPadX;
+        Button upBtn = null, leftBtn = btns[0];
+        for (int i = 0; i < btns.length; i++) {
+            //create a layout parameter first
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            curWidth = btns[i].getMeasuredWidth(); //get the width, beware of the caller site
+            Log.d(TAG, "ID "+ i +": " + Integer.toString(btns[i].getId()));
+            if (i > 0) {
+                lp.addRule(RelativeLayout.END_OF, btns[i - 1].getId()); //add END_OF property by default.
+                if (totalWidth + curWidth > w) {	//check if need to wrap
+                    upBtn = leftBtn;
+                    leftBtn = btns[i];
+                    totalWidth = curWidth;
+                    lp.removeRule(RelativeLayout.END_OF);   //remove the END_OF for wrap case
+                } else {
+                    totalWidth += curWidth;
+                }
+                if (upBtn != null)  //add below property for none-first "line"
+                    lp.addRule(RelativeLayout.BELOW, upBtn.getId() + 1);
+            } else {
+                totalWidth += curWidth;
+            }
+            btns[i].setLayoutParams(lp);	//set layout parameter for button
         }
     }
 
@@ -317,5 +412,12 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        Button b = (Button)v;
+        String buttonText = b.getText().toString();
+        handleNewFilter(buttonText);
     }
 }

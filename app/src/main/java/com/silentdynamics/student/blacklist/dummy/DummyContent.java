@@ -28,6 +28,7 @@ public class DummyContent {
         addItem(new DummyItem("1", "Item 1", "Fußball", 51.0389224, 13.7598763));
         addItem(new DummyItem("2", "Item 2", "Fußball", 51.0431384, 13.7667263));
         addItem(new DummyItem("3", "Item 3", "Politik", 51.0313414, 13.7766913));
+        addItem(new DummyItem("4", "Item 3", "Politik", 51.0413414, 13.7666913));
     }
 
     private static void addItem(DummyItem item) {

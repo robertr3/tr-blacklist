@@ -3,6 +3,7 @@ package com.silentdynamics.student.blacklist;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -91,6 +94,20 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView.setOnItemClickListener(this);
 
         return view;
+    }
+
+    public void filter(String filter) {
+        List<DummyContent.DummyItem> filtereditems = DummyContent.ITEMS;
+        for(DummyContent.DummyItem item : DummyContent.ITEMS) {
+            if(item.content.equals(filter)) {
+                filtereditems.add(item);
+            }
+        }
+
+        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, filtereditems);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+
     }
 
     @Override
