@@ -3,6 +3,7 @@ package com.silentdynamics.student.blacklist;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         View.OnClickListener {
     private static final String TAG = FindEventsActivity.class.getSimpleName();
 
+    boolean batterySaferMode;
+
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient = null;
     LatLng userPosition = new LatLng(-34, 151);
@@ -54,7 +57,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
-        Log.d(TAG, "find Events open");
 
         // Create an instance of GoogleAPIClient
         if (mGoogleApiClient == null) {
@@ -71,10 +73,14 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(BatteryLevelReceiver.PREFS_NAME, 0);
+        batterySaferMode = settings.getBoolean("BatterySafe", false);
+        Toast.makeText(this, "BatterySafe: " + batterySaferMode, Toast.LENGTH_SHORT).show();
+
 
         // Get the dummy events
         events = DummyContent.ITEMS;
-        Log.d(TAG, "1. " + events.get(0).topic);
 
         // Create the spinner
       //  Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
@@ -89,22 +95,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         }*/
 
         // Create the TagCloud
-        RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
-
-
-
-        //set the properties for button
-        /*for(DummyContent.DummyItem event : DummyContent.ITEMS) {
-            Button btnTag = new Button(this);
-            btnTag.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-            btnTag.setText(event.topic);
-            btnTag.setId(tagID);
-            tagID++;
-
-            //add button to the layout
-            tagCloud.addView(btnTag);
-        }*/
-
         String[] topics = getResources().getStringArray(R.array.topics_array);
         btns = new Button[topics.length];
 
@@ -112,9 +102,17 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
         if(layout != null) {
+            // Because of the error with teh first button. Only a workaround
+            // FIXME
+            btns[0] = new Button(this);
+            btns[0].setId(0);
+            btns[0].setText("");
+            btns[0].setOnClickListener(this);
+            layout.addView(btns[0]);
+
             for (Object t : topics) {
                 btns[tagID] = new Button(this);
-                btns[tagID].setId(tagID);
+                btns[tagID].setId(tagID + 1);
                 btns[tagID].setText(t.toString());
                 btns[tagID].setOnClickListener(this);
                 layout.addView(btns[tagID]);    //add button into the layout dynamically
@@ -333,7 +331,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             curWidth = btns[i].getMeasuredWidth(); //get the width, beware of the caller site
-            Log.d(TAG, "ID "+ i +": " + Integer.toString(btns[i].getId()));
             if (i > 0) {
                 lp.addRule(RelativeLayout.END_OF, btns[i - 1].getId()); //add END_OF property by default.
                 if (totalWidth + curWidth > w) {	//check if need to wrap
