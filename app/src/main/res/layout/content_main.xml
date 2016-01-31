@@ -43,16 +43,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_events"
-        android:id="@+id/createEventsButton"
-        android:layout_below="@+id/textWelcome"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="25dp"
-        android:onClick="navigatetoCreateEventActivity" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/delete_events"
         android:id="@+id/deleteEventsButton"
         android:layout_below="@+id/findEventsButton"

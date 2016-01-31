@@ -51,6 +51,8 @@ public class DBController  extends SQLiteOpenHelper {
      * @param queryValues
      */
     public void insertEvent(HashMap<String, String> queryValues) {
+        Log.d(TAG, "inseide insertEvent" + queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_USERNAME));
+
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_NAME));
