@@ -25,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
@@ -158,15 +157,9 @@ public class CreateEventActivity extends AppCompatActivity {
             queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacy);
             queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, username);
             controller.insertEvent(queryValues);
-
-            ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
-            for (int i = 0; i < eventList.size(); i++){
-                Log.d(TAG, "eventList " + i + ": " +eventList.get(i));
-            }
-
-                // Invoke RESTful Web Service with Http parameters
-                invokeWS(params);
-                this.callHomeActivity(view);
+            // Invoke RESTful Web Service with Http parameters
+            invokeWS(params);
+            this.callHomeActivity(view);
         }
         // When any of the Edit View control left blank
         else{
@@ -230,29 +223,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * Called when Save button is clicked
-     * @param view
-     */
-    public void addNewEvent(View view) {
-        HashMap<String, String> queryValues = new HashMap<String, String>();
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, nameE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, typeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1E.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTimeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTimeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE);
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacyE.toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, Utility.getUsername());
-        if (nameE.getText().toString() != null
-                && nameE.getText().toString().trim().length() != 0) {
-            controller.insertEvent(queryValues);
-            this.callHomeActivity(view);
-        } else {
-            Toast.makeText(getApplicationContext(), "Please enter Event name",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
+
     /**
      * Navigate to Home Screen
      * @param view

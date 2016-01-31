@@ -192,23 +192,12 @@
             android:text="@string/btnRegisterEvent"
             android:textColor="#fff" />
 
-            <Button
-                android:id="@+id/btnSaveEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
-                android:layout_toRightOf="@+id/btnRegisterEvent"
-                android:layout_below="@+id/registerEvent_error"
-                android:background="#ff6347"
-                android:onClick="addNewEvent"
-                android:text="@string/btnSaveEvent"
-                android:textColor="#fff" />
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/registerEvent_error"
-            android:layout_toRightOf="@+id/btnSaveEvent"
+            android:layout_toRightOf="@+id/btnRegisterEvent"
             android:layout_marginTop="20dp"
             android:text="@string/cancel"
             android:onClick="cancelAddEvent" />
