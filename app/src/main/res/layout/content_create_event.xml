@@ -56,13 +56,12 @@
             android:text="@string/type" />
         <!-- Type TextField -->
 
-        <EditText
-            android:id="@+id/registerType"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView2"
-            android:layout_below="@+id/textView2"
-            android:hint="Choose type of Event" />
+            <Spinner
+                android:id="@+id/type_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView2"
+                android:layout_below="@+id/textView2" />
 
         <!-- Topic1 Label -->
 
@@ -70,20 +69,18 @@
             android:id="@+id/textView3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/registerType"
-            android:layout_below="@+id/registerType"
+            android:layout_alignLeft="@+id/type_spinner"
+            android:layout_below="@+id/type_spinner"
             android:layout_marginTop="15dip"
             android:text="@string/topic" />
         <!-- Topic1 TextField -->
 
-        <EditText
-            android:id="@+id/chooseTopic1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView3"
-            android:layout_below="@+id/textView3"
-            android:hint="choose a Topic" />
-
+            <Spinner
+                android:id="@+id/topic_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView3"
+                android:layout_below="@+id/textView3" />
         <!-- timeStart Label -->
 
         <TextView
@@ -91,38 +88,21 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
-            android:layout_alignLeft="@+id/chooseTopic1"
-            android:layout_below="@+id/chooseTopic1"
+            android:layout_alignLeft="@+id/topic_spinner"
+            android:layout_below="@+id/topic_spinner"
             android:text="@string/timeStart" />
+
         <!-- timeStart TextField -->
 
-        <EditText
-            android:id="@+id/choosetimeS"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView4"
-            android:layout_below="@+id/textView4"
-            android:hint="choose a starting Time" />
-
-        <!-- timeEnd Label -->
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dip"
-            android:layout_alignLeft="@+id/choosetimeS"
-            android:layout_below="@+id/choosetimeS"
-            android:text="@string/timeEnd" />
-        <!-- timeEnd TextField -->
-
-        <EditText
-            android:id="@+id/choosetimeE"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView5"
-            android:layout_below="@+id/textView5"
-            android:hint="choose ending Time" />
+            <TextView
+                android:id="@+id/timeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:layout_marginLeft="15dip"
+                android:layout_below="@+id/textView4"
+                android:textSize="20dp"
+                android:text="0:00" />
 
         <!-- location Label -->
 
@@ -131,8 +111,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
-            android:layout_alignLeft="@+id/choosetimeE"
-            android:layout_below="@+id/choosetimeE"
+            android:layout_alignLeft="@+id/timeValue"
+            android:layout_below="@+id/timeValue"
             android:text="@string/location" />
         <!-- location TextField -->
 

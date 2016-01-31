@@ -53,7 +53,13 @@
         <item>-1</item>
     </string-array>
 
-    <!-- Array for topics -->
+    <!-- Array for types of Events for CreateEvents-->
+    <string-array name="typeCreate_array">
+        <item>Meet and Drink</item>
+        <item>Movies</item>
+    </string-array>
+
+    <!-- Array for topics for FindEvents, type: Meet&Drink-->
     <string-array name="topics_array">
         <item>Kein Filter</item>
         <item>Fußball</item>
@@ -65,8 +71,53 @@
         <item>Beziehungen</item>
         <item>Probleme</item>
         <item>Weltuntergang</item>
+        <item>Sonnenaufgänge</item>
     </string-array>
 
+    <!-- Array for topics for FindEvents, type: Movies-->
+    <string-array name="topicsMovie_array">
+        <item>Kein Filter</item>
+        <item>Action</item>
+        <item>Romance</item>
+        <item>Comedy</item>
+        <item>Romcom</item>
+        <item>Horror</item>
+        <item>Splater</item>
+        <item>Trash</item>
+        <item>Mocumentary</item>
+        <item>History</item>
+        <item>Drama</item>
+    </string-array>
+
+    <!-- Array for topics for CreateEvents, type: Meet&Drink-->
+    <string-array name="topicsCreateMD_array">
+        <item>Choose Topic</item>
+        <item>Fußball</item>
+        <item>Politik</item>
+        <item>Studium</item>
+        <item>Krankheit</item>
+        <item>Urlaub</item>
+        <item>Kinder</item>
+        <item>Beziehungen</item>
+        <item>Probleme</item>
+        <item>Weltuntergang</item>
+        <item>Sonnenaufgänge</item>
+    </string-array>
+
+    <!-- Array for topics for CreateEvents, type: Movies-->
+    <string-array name="topicsCreateMovie_array">
+        <item>Choose Genre</item>
+        <item>Action</item>
+        <item>Romance</item>
+        <item>Comedy</item>
+        <item>Romcom</item>
+        <item>Horror</item>
+        <item>Splater</item>
+        <item>Trash</item>
+        <item>Mocumentary</item>
+        <item>History</item>
+        <item>Drama</item>
+    </string-array>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -105,4 +156,6 @@
     <string name="cancel">Cancel</string>
     <string name="btnSaveEvent">Save</string>
     <string name="delete_events">Event löschen</string>
+    <string name="pick_time">Pick time</string>
+    <string name="pick_date">Pick date</string>
 </resources>
