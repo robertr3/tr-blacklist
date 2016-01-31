@@ -32,7 +32,6 @@ public class DBController  extends SQLiteOpenHelper {
                 EventsContract.EventsEntry.COLUMN_NAME_TYPE + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_TOPIC + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_TIMESTART + " TEXT," +
-                EventsContract.EventsEntry.COLUMN_NAME_TIMEEND + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_LOCATION + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_PRIVACY + " TINYINT," +
                 EventsContract.EventsEntry.COLUMN_NAME_USERNAME + " TEXT," +
@@ -59,7 +58,6 @@ public class DBController  extends SQLiteOpenHelper {
         values.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TYPE));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TOPIC));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART));
-        values.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_LOCATION));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_USERNAME));
@@ -112,10 +110,9 @@ public class DBController  extends SQLiteOpenHelper {
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, cursor.getString(2));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, cursor.getString(3));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, cursor.getString(4));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, cursor.getString(5));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(6));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(7));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(8));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
