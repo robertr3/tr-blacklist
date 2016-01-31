@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -86,16 +85,16 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         events = DummyContent.ITEMS;
 
         // Create the spinner
-        Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
+      //  Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.topics_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        if(spinner != null) {
+  /*      if(spinner != null) {
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
-        }
+        }*/
 
         // Create the TagCloud
         String[] topics = getResources().getStringArray(R.array.topics_array);

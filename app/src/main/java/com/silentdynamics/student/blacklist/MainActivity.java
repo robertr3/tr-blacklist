@@ -10,7 +10,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -76,9 +75,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         if(eventList.size()!=0){
             //Set the Event Array list in ListView
+            EventlistAdapter eventAdapter = new EventlistAdapter(eventList, this);
+
             ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
             ListView myList=(ListView)findViewById(android.R.id.list);
-            myList.setAdapter(adapter);
+            myList.setAdapter(eventAdapter);
             //Display Sync status of SQLite DB
             Toast.makeText(getApplicationContext(), controller.getSyncStatus(), Toast.LENGTH_LONG).show();
         }
