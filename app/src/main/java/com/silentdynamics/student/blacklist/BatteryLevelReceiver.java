@@ -39,7 +39,6 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
         if(intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
             Log.d("Battery", "Battery power connected");
-            Toast.makeText(context, "Battery power conntected",Toast.LENGTH_SHORT).show();
             isConnected = true;
             getBatteryStatus(context);
         }
@@ -81,12 +80,5 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         // Commit the edits!
         editor.commit();
         return;
-    }
-
-    public static void setDefaults(String key, String value, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, value);
-        editor.commit();
     }
 }
