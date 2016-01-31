@@ -1,6 +1,7 @@
 package com.silentdynamics.student.blacklist;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -88,7 +90,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         // Create the TagCloud
-        //RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
+        RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
 
 
 
@@ -109,7 +111,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
         int tagID = 0;
 
-      /*  RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
         if(layout != null) {
             for (Object t : topics) {
                 btns[tagID] = new Button(this);
@@ -125,7 +127,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                     reLayout();
                 }
             });
-        }*/
+        }
 
 
 
@@ -314,7 +316,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
-/*    // FIXME Erster Button wird übergangen
+    // FIXME Erster Button wird übergangen
     @TargetApi(17)
     protected void reLayout() {
         int totalWidth;
@@ -350,7 +352,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             }
             btns[i].setLayoutParams(lp);	//set layout parameter for button
         }
-    } */
+    }
 
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "onConnectionSuspended");
