@@ -64,6 +64,7 @@ public class DBController  extends SQLiteOpenHelper {
         values.put(EventsContract.EventsEntry.COLUMN_NAME_UPDATE, "no");
         database.insert(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_TOPIC, values);
         database.close();
+        Log.d(TAG, "inseide insertEvent" + queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_USERNAME));
     }
 
     /**

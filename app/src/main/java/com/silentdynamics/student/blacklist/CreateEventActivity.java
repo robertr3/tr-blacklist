@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
@@ -107,6 +108,7 @@ public class CreateEventActivity extends AppCompatActivity {
      * @param view
      */
     public void registerEvent(View view){
+        /*Operations for central MySQL db */
         // Get NAme ET control value
         String name = nameE.getText().toString();
         // Get type ET control value
@@ -117,15 +119,16 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = startTimeE.getText().toString();
         // Get endTime ET control value
         String endTime = endTimeE.getText().toString();
-        // Get location ET control value
-        //String location = locationE.getText().toString();
         // Get privacy Switch value
-        Boolean privacy = privacyE.isChecked();
+        String privacy = String.valueOf(privacyE.isChecked());
+        Log.d(TAG, "privacy: " + privacy);
         // Get username
         String username = Utility.getUsername();
         if (username == null){username = "TestUser";}
         // Instantiate Http Request Param Object
         RequestParams params = new RequestParams();
+        HashMap<String, String> queryValues = new HashMap<String, String>();
+
         // When Name Edit View, Email Edit View and Password Edit View have values other than Null
         if(Utility.isNotNull(name) && Utility.isNotNull(type) && Utility.isNotNull(topic1) && Utility.isNotNull(startTime) && Utility.isNotNull(locationE)){
                 // Put Http parameter name with value of Name Edit View control
@@ -142,16 +145,28 @@ public class CreateEventActivity extends AppCompatActivity {
                 params.put("timeend", "not defiened");
             }
                 params.put("location", locationE);
-            if (privacy == true){
-                params.put("privacy", "true");
-            }
-            else {
-                params.put("privacy", "false");
-            }
+                params.put("privacy", privacy);
                 params.put("username", username);
+
+            /*Operations for local SQLite db */
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, name);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, type);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTime);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTime);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacy);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, username);
+            controller.insertEvent(queryValues);
+
+            ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
+            for (int i = 0; i < eventList.size(); i++){
+                Log.d(TAG, "eventList " + i + ": " +eventList.get(i));
+            }
+
                 // Invoke RESTful Web Service with Http parameters
                 invokeWS(params);
-                callHomeActivity(view);
+                this.callHomeActivity(view);
         }
         // When any of the Edit View control left blank
         else{
