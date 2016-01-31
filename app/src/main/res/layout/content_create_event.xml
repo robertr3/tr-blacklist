@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -135,13 +136,14 @@
             android:text="@string/location" />
         <!-- location TextField -->
 
-        <EditText
-            android:id="@+id/location"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView6"
-            android:layout_below="@+id/textView6"
-            android:hint="choose a Location" />
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView6"
+                android:layout_below="@+id/textView6"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                tools:layout="@layout/place_autocomplete_fragment" />
 
         <!-- privacy Label -->
 
@@ -150,8 +152,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
-            android:layout_alignLeft="@+id/location"
-            android:layout_below="@+id/location"
+            android:layout_alignLeft="@+id/place_autocomplete_fragment"
+            android:layout_below="@+id/place_autocomplete_fragment"
             android:text="@string/privacy" />
         <!-- location Switch -->
 
@@ -190,23 +192,12 @@
             android:text="@string/btnRegisterEvent"
             android:textColor="#fff" />
 
-            <Button
-                android:id="@+id/btnSaveEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
-                android:layout_toRightOf="@+id/btnRegisterEvent"
-                android:layout_below="@+id/registerEvent_error"
-                android:background="#ff6347"
-                android:onClick="addNewEvent"
-                android:text="@string/btnSaveEvent"
-                android:textColor="#fff" />
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/registerEvent_error"
-            android:layout_toRightOf="@+id/btnSaveEvent"
+            android:layout_toRightOf="@+id/btnRegisterEvent"
             android:layout_marginTop="20dp"
             android:text="@string/cancel"
             android:onClick="cancelAddEvent" />

@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,6 +30,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 public class CreateEventActivity extends AppCompatActivity {
+    private static final String TAG = CreateEventActivity.class.getSimpleName();
 
     // Name Edit View Object
     EditText nameE;
@@ -36,7 +43,7 @@ public class CreateEventActivity extends AppCompatActivity {
     // Passwprd Edit View Object
     EditText endTimeE;
     // Passwprd Edit View Object
-    EditText locationE;
+    String locationE;
     // Passwprd Edit View Object
     Switch privacyE;
     TextView errorMsg;
@@ -53,7 +60,6 @@ public class CreateEventActivity extends AppCompatActivity {
         topic1E = (EditText)findViewById(R.id.chooseTopic1);
         startTimeE = (EditText)findViewById(R.id.choosetimeS);
         endTimeE = (EditText)findViewById(R.id.choosetimeE);
-        locationE = (EditText)findViewById(R.id.location);
         privacyE = (Switch)findViewById(R.id.privacy);
         errorMsg = (TextView)findViewById(R.id.registerEvent_error);
 
@@ -66,6 +72,33 @@ public class CreateEventActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        /*
+        * The PlaceSelectionListener handles returning a place in response to the user's selection.
+        * */
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                locationE = (String) place.getAddress();
+                Log.i(TAG, "Place: " + locationE);
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
     }
 
     /**
@@ -74,6 +107,7 @@ public class CreateEventActivity extends AppCompatActivity {
      * @param view
      */
     public void registerEvent(View view){
+        /*Operations for central MySQL db */
         // Get NAme ET control value
         String name = nameE.getText().toString();
         // Get type ET control value
@@ -84,17 +118,18 @@ public class CreateEventActivity extends AppCompatActivity {
         String startTime = startTimeE.getText().toString();
         // Get endTime ET control value
         String endTime = endTimeE.getText().toString();
-        // Get location ET control value
-        String location = locationE.getText().toString();
         // Get privacy Switch value
-        Boolean privacy = privacyE.isChecked();
+        String privacy = String.valueOf(privacyE.isChecked());
+        Log.d(TAG, "privacy: " + privacy);
         // Get username
         String username = Utility.getUsername();
         if (username == null){username = "TestUser";}
         // Instantiate Http Request Param Object
         RequestParams params = new RequestParams();
+        HashMap<String, String> queryValues = new HashMap<String, String>();
+
         // When Name Edit View, Email Edit View and Password Edit View have values other than Null
-        if(Utility.isNotNull(name) && Utility.isNotNull(type) && Utility.isNotNull(topic1) && Utility.isNotNull(startTime) && Utility.isNotNull(location)){
+        if(Utility.isNotNull(name) && Utility.isNotNull(type) && Utility.isNotNull(topic1) && Utility.isNotNull(startTime) && Utility.isNotNull(locationE)){
                 // Put Http parameter name with value of Name Edit View control
                 params.put("name", name);
                 // Put Http parameter type with value of type Edit View control
@@ -108,16 +143,23 @@ public class CreateEventActivity extends AppCompatActivity {
             else {
                 params.put("timeend", "not defiened");
             }
-                params.put("location", location);
-            if (privacy == true){
-                params.put("privacy", "true");
-            }
-            else {
-                params.put("privacy", "false");
-            }
+                params.put("location", locationE);
+                params.put("privacy", privacy);
                 params.put("username", username);
-                // Invoke RESTful Web Service with Http parameters
-                invokeWS(params);
+
+            /*Operations for local SQLite db */
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, name);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, type);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTime);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTime);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacy);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, username);
+            controller.insertEvent(queryValues);
+            // Invoke RESTful Web Service with Http parameters
+            invokeWS(params);
+            this.callHomeActivity(view);
         }
         // When any of the Edit View control left blank
         else{
@@ -181,29 +223,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * Called when Save button is clicked
-     * @param view
-     */
-    public void addNewEvent(View view) {
-        HashMap<String, String> queryValues = new HashMap<String, String>();
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, nameE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, typeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1E.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTimeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTimeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacyE.toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, Utility.getUsername());
-        if (nameE.getText().toString() != null
-                && nameE.getText().toString().trim().length() != 0) {
-            controller.insertEvent(queryValues);
-            this.callHomeActivity(view);
-        } else {
-            Toast.makeText(getApplicationContext(), "Please enter Event name",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
+
     /**
      * Navigate to Home Screen
      * @param view
