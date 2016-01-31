@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +52,8 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
      */
     private ListAdapter mAdapter;
 
+    private List<DummyContent.DummyItem> events = new ArrayList<DummyContent.DummyItem>();
+
     // TODO: Rename and change types of parameters
     public static EventFragment newInstance(String param1, String param2) {
         EventFragment fragment = new EventFragment();
@@ -76,9 +80,9 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
+
         mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+                android.R.layout.simple_list_item_1, android.R.id.text1, events);
     }
 
     @Override
@@ -90,6 +94,8 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
+        this.filter("Kein Filter");
+
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
@@ -97,16 +103,14 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     public void filter(String filter) {
-        List<DummyContent.DummyItem> filtereditems = DummyContent.ITEMS;
-        for(DummyContent.DummyItem item : DummyContent.ITEMS) {
-            if(item.content.equals(filter)) {
-                filtereditems.add(item);
+        events.clear();
+         for (DummyContent.DummyItem item : DummyContent.ITEMS) {
+            if (item.topic.equals(filter) || filter.equals("Kein Filter")) {
+                events.add(item);
             }
         }
 
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, filtereditems);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
 
     }
 

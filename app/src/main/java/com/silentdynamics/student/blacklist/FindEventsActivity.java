@@ -95,7 +95,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         // Create the TagCloud
-        RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
+        //RelativeLayout tagCloud = (RelativeLayout) findViewById(R.id.topics_cloud);
 
 
 
@@ -117,20 +117,22 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         int tagID = 0;
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.topics_cloud);
-        for(Object t : topics) {
-            btns[tagID] = new Button(this);
-            btns[tagID].setId(tagID);
-            btns[tagID].setText(t.toString());
-            btns[tagID].setOnClickListener(this);
-            layout.addView(btns[tagID]);	//add button into the layout dynamically
-            tagID++;
-        }
-        layout.post(new Runnable() {	//post a Runnable that call reLayout to layout object
-            @Override
-            public void run() {
-                reLayout();
+        if(layout != null) {
+            for (Object t : topics) {
+                btns[tagID] = new Button(this);
+                btns[tagID].setId(tagID);
+                btns[tagID].setText(t.toString());
+                btns[tagID].setOnClickListener(this);
+                layout.addView(btns[tagID]);    //add button into the layout dynamically
+                tagID++;
             }
-        });
+            layout.post(new Runnable() {    //post a Runnable that call reLayout to layout object
+                @Override
+                public void run() {
+                    reLayout();
+                }
+            });
+        }
 
 
 
