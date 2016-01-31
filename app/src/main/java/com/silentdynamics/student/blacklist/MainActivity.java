@@ -75,9 +75,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         if(eventList.size()!=0){
             //Set the Event Array list in ListView
+            EventlistAdapter eventAdapter = new EventlistAdapter(eventList, this);
+
             ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
             ListView myList=(ListView)findViewById(android.R.id.list);
-            myList.setAdapter(adapter);
+            myList.setAdapter(eventAdapter);
             //Display Sync status of SQLite DB
             Toast.makeText(getApplicationContext(), controller.getSyncStatus(), Toast.LENGTH_LONG).show();
         }
@@ -210,23 +212,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent findEventIntent = new Intent(getApplicationContext(),FindEventsActivity.class);
         findEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(findEventIntent);
-    }
-    public void deleteFirstEvent(View view){
-        controller.deleteEvent();
-        ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
-        Log.d(TAG, "eventList: " + eventList.size());
-        for (int i = 0; i < eventList.size(); i++){
-            Log.d(TAG, "eventList " + i + ": " +eventList.get(i));
-        }
-
-        //
-        if(eventList.size()!=0){
-            //Set the Event Array list in ListView
-            ListAdapter adapter = new SimpleAdapter( MainActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
-            ListView myList=(ListView)findViewById(android.R.id.list);
-            myList.setAdapter(adapter);
-            //Display Sync status of SQLite DB
-            Toast.makeText(getApplicationContext(), controller.getSyncStatus(), Toast.LENGTH_LONG).show();
-        }
     }
 }

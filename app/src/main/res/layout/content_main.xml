@@ -50,22 +50,12 @@
         android:layout_marginTop="25dp"
         android:onClick="navigatetoCreateEventActivity" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_events"
-        android:id="@+id/deleteEventsButton"
-        android:layout_below="@+id/findEventsButton"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="25dp"
-        android:onClick="deleteFirstEvent" />
-
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/deleteEventsButton"
+        android:layout_below="@+id/findEventsButton"
         android:orientation="vertical"
         android:layout_marginTop="40dp">
 

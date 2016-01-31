@@ -69,7 +69,7 @@ public class DBController  extends SQLiteOpenHelper {
     }
 
     /**
-     * Delets Event from SQLite DB
+     * Delets first Event from SQLite DB
      */
     public void deleteEvent() {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -83,6 +83,15 @@ public class DBController  extends SQLiteOpenHelper {
                     "=?",new String[]{rowId});
         }
         database.close();
+    }
+
+    /**
+     * Delets specified Event from SQLite DB
+     */
+    public void deleteEvent(String id) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        Log.d(TAG, "insede deleteSpecificEvent: " + id);
+        database.delete(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID + "=" + id, null);
     }
 
     /**
