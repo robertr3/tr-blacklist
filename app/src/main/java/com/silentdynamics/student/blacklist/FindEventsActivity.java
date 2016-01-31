@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,10 +35,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
@@ -55,6 +61,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     EventFragment listFragment;
 
     List<DummyContent.DummyItem> events;
+    private Map<Marker, DummyContent.DummyItem> markerMap = new HashMap<>();
     Button[] btns;
 
     @Override
@@ -311,6 +318,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             // clear all Markers
             mMap.clear();
+            markerMap.clear();
 
             // Add new ones according to filter
             for (DummyContent.DummyItem item : events) {
@@ -319,10 +327,10 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
                     MarkerOptions o = new MarkerOptions()
                             .position(latLng)
-                            .title(item.content);
+                            .title(item.name);
 
-                    mMap.addMarker(o);
-
+                    Marker marker = mMap.addMarker(o);
+                    markerMap.put(marker,item);
                 }
             }
         }
@@ -399,6 +407,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        markerMap.clear();
+        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         LatLng latLng;
 
         for(DummyContent.DummyItem item : events) {
@@ -406,12 +416,11 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             MarkerOptions o = new MarkerOptions()
                     .position(latLng)
-                    .title(item.content);
+                    .title(item.name);
 
-            mMap.addMarker(o);
+            Marker marker = mMap.addMarker(o);
+            markerMap.put(marker,item);
         }
-        //mMap.addMarker(new MarkerOptions().position(userPosition).title("Marker at user position"));
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition));
     }
 
     public void onFragmentInteraction(String id){
@@ -438,5 +447,40 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         Button b = (Button)v;
         String buttonText = b.getText().toString();
         handleNewFilter(buttonText);
+    }
+
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+            myContentsView = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
+            TextView tvTopic = ((TextView)myContentsView.findViewById(R.id.topic));
+            TextView tvTime = ((TextView)myContentsView.findViewById(R.id.time));
+
+            tvTitle.setText(marker.getTitle());
+            tvTitle.setTextSize(15);
+
+            DummyContent.DummyItem event = markerMap.get(marker);
+
+            tvTopic.setText("~" + event.topic);
+            tvTime.setText(event.start + " - " + event.end);
+            tvTime.setTextColor(Color.GRAY);
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
 }
