@@ -63,13 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /*
         *Eventlist related operations
-        *Get Event records from SQLite DB
+        *Get Event records from local composeJSONfromSQLiteSQLite DB
         *
         * */
-        HashMap<String, String> queryValues = new HashMap<String, String>();
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, "Test");
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, "TestTopic");
-        controller.insertEvent(queryValues);
 
         ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
         for (int i = 0; i < eventList.size(); i++){

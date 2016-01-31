@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,6 +30,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 public class CreateEventActivity extends AppCompatActivity {
+    private static final String TAG = CreateEventActivity.class.getSimpleName();
 
     // Name Edit View Object
     EditText nameE;
@@ -36,7 +43,7 @@ public class CreateEventActivity extends AppCompatActivity {
     // Passwprd Edit View Object
     EditText endTimeE;
     // Passwprd Edit View Object
-    EditText locationE;
+    String locationE;
     // Passwprd Edit View Object
     Switch privacyE;
     TextView errorMsg;
@@ -53,7 +60,6 @@ public class CreateEventActivity extends AppCompatActivity {
         topic1E = (EditText)findViewById(R.id.chooseTopic1);
         startTimeE = (EditText)findViewById(R.id.choosetimeS);
         endTimeE = (EditText)findViewById(R.id.choosetimeE);
-        locationE = (EditText)findViewById(R.id.location);
         privacyE = (Switch)findViewById(R.id.privacy);
         errorMsg = (TextView)findViewById(R.id.registerEvent_error);
 
@@ -66,6 +72,33 @@ public class CreateEventActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        /*
+        * The PlaceSelectionListener handles returning a place in response to the user's selection.
+        * */
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                locationE = (String) place.getAddress();
+                Log.i(TAG, "Place: " + locationE);
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
     }
 
     /**
@@ -85,7 +118,7 @@ public class CreateEventActivity extends AppCompatActivity {
         // Get endTime ET control value
         String endTime = endTimeE.getText().toString();
         // Get location ET control value
-        String location = locationE.getText().toString();
+        //String location = locationE.getText().toString();
         // Get privacy Switch value
         Boolean privacy = privacyE.isChecked();
         // Get username
@@ -94,7 +127,7 @@ public class CreateEventActivity extends AppCompatActivity {
         // Instantiate Http Request Param Object
         RequestParams params = new RequestParams();
         // When Name Edit View, Email Edit View and Password Edit View have values other than Null
-        if(Utility.isNotNull(name) && Utility.isNotNull(type) && Utility.isNotNull(topic1) && Utility.isNotNull(startTime) && Utility.isNotNull(location)){
+        if(Utility.isNotNull(name) && Utility.isNotNull(type) && Utility.isNotNull(topic1) && Utility.isNotNull(startTime) && Utility.isNotNull(locationE)){
                 // Put Http parameter name with value of Name Edit View control
                 params.put("name", name);
                 // Put Http parameter type with value of type Edit View control
@@ -108,7 +141,7 @@ public class CreateEventActivity extends AppCompatActivity {
             else {
                 params.put("timeend", "not defiened");
             }
-                params.put("location", location);
+                params.put("location", locationE);
             if (privacy == true){
                 params.put("privacy", "true");
             }
@@ -118,6 +151,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 params.put("username", username);
                 // Invoke RESTful Web Service with Http parameters
                 invokeWS(params);
+                callHomeActivity(view);
         }
         // When any of the Edit View control left blank
         else{
@@ -192,7 +226,7 @@ public class CreateEventActivity extends AppCompatActivity {
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, topic1E.getText().toString());
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, startTimeE.getText().toString());
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_TIMEEND, endTimeE.getText().toString());
-        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE.getText().toString());
+        queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE);
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacyE.toString());
         queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, Utility.getUsername());
         if (nameE.getText().toString() != null

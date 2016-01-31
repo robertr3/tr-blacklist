@@ -1,7 +1,6 @@
 package com.silentdynamics.student.blacklist;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -22,10 +21,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 import java.util.List;
 import java.util.Random;
-import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
