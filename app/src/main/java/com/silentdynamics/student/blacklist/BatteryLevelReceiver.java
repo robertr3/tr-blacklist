@@ -82,11 +82,4 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         editor.commit();
         return;
     }
-
-    public static void setDefaults(String key, String value, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, value);
-        editor.commit();
-    }
 }

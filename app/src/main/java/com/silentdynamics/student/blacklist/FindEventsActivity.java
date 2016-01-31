@@ -76,8 +76,10 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(BatteryLevelReceiver.PREFS_NAME, 0);
-        batterySaferMode = settings.getBoolean("BatterySafe", false);
-        Toast.makeText(this, "BatterySafe: " + batterySaferMode, Toast.LENGTH_SHORT).show();
+        if(settings.contains("BatterySafe")) {
+            batterySaferMode = settings.getBoolean("BatterySafe", false);
+            Toast.makeText(this, "BatterySafe: " + batterySaferMode, Toast.LENGTH_SHORT).show();
+        }
 
 
         // Get the dummy events
