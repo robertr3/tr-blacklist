@@ -39,7 +39,6 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
         if(intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
             Log.d("Battery", "Battery power connected");
-            Toast.makeText(context, "Battery power conntected",Toast.LENGTH_SHORT).show();
             isConnected = true;
             getBatteryStatus(context);
         }

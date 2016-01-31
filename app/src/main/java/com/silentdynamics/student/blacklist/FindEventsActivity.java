@@ -2,10 +2,13 @@ package com.silentdynamics.student.blacklist;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +47,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient = null;
-    LatLng userPosition = new LatLng(-34, 151);
+    LatLng userPosition;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LocationRequest mLocationRequest;
@@ -73,6 +77,18 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+        /*if(checkPositionPermission() == true) {
+            Location loc = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+            if (loc == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
+            else {
+                userPosition = new LatLng(loc.getLatitude(), loc.getLongitude());
+            }
+
+        }*/
+
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(BatteryLevelReceiver.PREFS_NAME, 0);
         if(settings.contains("BatterySafe")) {
@@ -85,16 +101,16 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         events = DummyContent.ITEMS;
 
         // Create the spinner
-      //  Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.topics_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-  /*      if(spinner != null) {
+        //Apply the adapter to the spinner
+        if(spinner != null) {
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
-        }*/
+        }
 
         // Create the TagCloud
         String[] topics = getResources().getStringArray(R.array.topics_array);
@@ -110,6 +126,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             btns[0].setId(0);
             btns[0].setText("");
             btns[0].setOnClickListener(this);
+            btns[0].setStateListAnimator(null);
             layout.addView(btns[0]);
 
             for (Object t : topics) {
@@ -144,9 +161,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 return;
             }
 
-            // TODO get batterySaferMode true/false
-            int random = new Random().nextInt(2);
-            if(random == 0) {
+            if(checkIfOnline() == false) {
                 // Create a new Fragment to be placed in the activity layout
                 listFragment = new EventFragment();
 
@@ -172,6 +187,9 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     protected void onResume() {
         super.onResume();
         mGoogleApiClient.connect();
+        if(mMap != null) {
+            onMapReady(mMap);
+        }
     }
 
     @Override
@@ -194,43 +212,53 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Location location = null;
+           if(checkPositionPermission() == true) {
+            Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (loc == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
+            else {
+                userPosition = new LatLng(loc.getLatitude(), loc.getLongitude());
+                Toast.makeText(this, "UserPos: " + userPosition, Toast.LENGTH_SHORT).show();
+            }
+            if(mMap != null) {
+                updateMap();
+            }
+        }
+    }
 
+    private void updateMap() {
+        if(batterySaferMode == false && checkPositionPermission() == true) {
+            mMap.setMyLocationEnabled(true);
+        }
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition));
+    }
+
+    private boolean checkPositionPermission() {
         // Check for permission
         int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            location = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-
-            if (location == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            }
-            else {
-                //userPosition = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                handleNewLocation(location);
-            }
+            return true;
         }
         else {
-            Log.d("Permission", " not granted");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            return false;
         }
+    }
 
-        /*//PackageManager pm = this.getPackageManager();
-        //int hasPerm = pm.checkPermission(
-               // Manifest.permission.ACCESS_FINE_LOCATION,
-               // this.getPackageName());
-        if (hasPerm != PackageManager.PERMISSION_GRANTED) {
-            Log.d("Permission", "granted");
-
+    private boolean checkIfOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
         }
-        else {
-            Log.d("Permission", " not granted");
-
-        }*/
+        return ni.isConnected();
     }
 
     @Override
@@ -258,32 +286,21 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
+        /*Log.d(TAG, location.toString());
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
-        MarkerOptions options = new MarkerOptions()
+        /*MarkerOptions options = new MarkerOptions()
                 .position(latLng)
-                .title("I am here!");
+                .title("I am here!");*/
 
-        if(mMap != null) {
-            mMap.addMarker(options);
+        /*if(mMap != null) {
+            //mMap.addMarker(options);
             mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        }
 
-        for(DummyContent.DummyItem item : events) {
-            latLng = new LatLng(item.lat, item.lng);
-
-            MarkerOptions o = new MarkerOptions()
-                    .position(latLng)
-                    .title(item.content);
-
-            if(mMap != null) {
-                mMap.addMarker(o);
-            }
-        }
+        }*/
     }
 
     private void handleNewFilter(String filter) {
@@ -382,11 +399,19 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng latLng;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        for(DummyContent.DummyItem item : events) {
+            latLng = new LatLng(item.lat, item.lng);
+
+            MarkerOptions o = new MarkerOptions()
+                    .position(latLng)
+                    .title(item.content);
+
+            mMap.addMarker(o);
+        }
         //mMap.addMarker(new MarkerOptions().position(userPosition).title("Marker at user position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition));
+       // mMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition));
     }
 
     public void onFragmentInteraction(String id){
@@ -400,7 +425,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
         handleNewFilter(parent.getItemAtPosition(position).toString());
     }
 
