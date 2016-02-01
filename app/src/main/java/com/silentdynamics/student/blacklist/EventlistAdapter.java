@@ -82,7 +82,7 @@ public class EventlistAdapter extends BaseAdapter implements ListAdapter{
         addBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                controller.switchBookmark(list.get(position).get("id"));
+                // do something
                 notifyDataSetChanged();
             }
         });
