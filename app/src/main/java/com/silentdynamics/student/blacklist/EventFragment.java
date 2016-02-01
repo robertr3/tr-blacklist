@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
@@ -110,14 +111,9 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
                 //Log.v("long clicked", mListView.getItemAtPosition(pos).toString());
                 HashMap<String,String> o = (HashMap<String,String>) mListView.getItemAtPosition(pos);
                 o.get("id");
-                Log.v("long clicked", "id: " + o.get("id"));
-                Log.v("long clicked", "boomark: " + o.get("privacy"));
                 dbc.switchBookmark(o.get("id"));
 
-                ArrayList<HashMap<String, String>> lala = dbc.getAllEvents();
-                for (int i = 0; i < lala.size(); i++){
-                    Log.d("Bookmarked", lala.get(i).get("privacy"));
-                }
+                Toast.makeText(getActivity(), o.get("name") + " wurde gespeichert", Toast.LENGTH_LONG).show();
 
                 return true;
             }

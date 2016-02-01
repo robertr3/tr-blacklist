@@ -164,17 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         }
                     }
-
-
-                    /*long mills = systemTime.getTime() - eventTime.getTime();
-                    Log.v("Data1", "" + systemTime.getTime());
-                    Log.v("Data2", "" + eventTime.getTime());
-                    int Hours = (int) (mills / (1000 * 60 * 60));
-                    int Mins = (int) (mills / (1000 * 60)) % 60;
-
-                    String diff = Hours + ":" + Mins; // updated value every1 second
-                    //txtCurrentTime.setText(diff);
-                    Log.d(TAG, diff);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

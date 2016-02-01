@@ -52,7 +52,7 @@ import java.util.Map;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemSelectedListener,
-        View.OnClickListener {
+        View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = FindEventsActivity.class.getSimpleName();
 
     boolean batterySaferMode;
@@ -69,7 +69,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     List<DummyContent.DummyItem> events;
     ArrayList<HashMap<String, String>> eventList;
     DBController dbc = new DBController(this);
-    private Map<Marker, DummyContent.DummyItem> markerMap = new HashMap<>();
+    //private Map<Marker, DummyContent.DummyItem> markerMap = new HashMap<>();
+    private Map<Marker, HashMap<String, String>> markerMap = new HashMap<>();
     Button[] btns;
 
     @Override
@@ -327,16 +328,25 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             markerMap.clear();
 
             // Add new ones according to filter
-            for (DummyContent.DummyItem item : events) {
-                if (item.topic.equals(filter) || filter.equals("Kein Filter")) {
-                    latLng = new LatLng(item.lat, item.lng);
+            //for (DummyContent.DummyItem item : events) {
+            Geocoder geocoder = new Geocoder(getBaseContext());
+            List<Address> addresses = null;
+            for (int i = 0; i < eventList.size(); i++){
+                if (eventList.get(i).get("topic1").equals(filter) || filter.equals("Kein Filter")) {
+                    String locName = eventList.get(i).get("location");
+                    try {
+                    addresses = geocoder.getFromLocationName(locName, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
 
                     MarkerOptions o = new MarkerOptions()
                             .position(latLng)
-                            .title(item.name);
+                            .title(eventList.get(i).get("name"));
 
                     Marker marker = mMap.addMarker(o);
-                    markerMap.put(marker,item);
+                    markerMap.put(marker,eventList.get(i));
                 }
             }
         }
@@ -413,19 +423,28 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnInfoWindowClickListener(this);
         markerMap.clear();
         mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         LatLng latLng;
 
-        for(DummyContent.DummyItem item : events) {
-            latLng = new LatLng(item.lat, item.lng);
+        Geocoder geocoder = new Geocoder(getBaseContext());
+        List<Address> addresses = null;
+        for (int i = 0; i < eventList.size(); i++){
+                String locName = eventList.get(i).get("location");
+                try {
+                    addresses = geocoder.getFromLocationName(locName, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
 
-            MarkerOptions o = new MarkerOptions()
-                    .position(latLng)
-                    .title(item.name);
+                MarkerOptions o = new MarkerOptions()
+                        .position(latLng)
+                        .title(eventList.get(i).get("name"));
 
-            Marker marker = mMap.addMarker(o);
-            markerMap.put(marker,item);
+                Marker marker = mMap.addMarker(o);
+                markerMap.put(marker,eventList.get(i));
         }
 
         // new GeocoderTask().execute("Comeniusstraße Dresden, Deutschland");
@@ -457,6 +476,12 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         handleNewFilter(buttonText);
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        dbc.switchBookmark(markerMap.get(marker).get("id"));
+        Toast.makeText(getBaseContext(), markerMap.get(marker).get("name") + " gespeichert", Toast.LENGTH_LONG).show();
+    }
+
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private final View myContentsView;
@@ -475,10 +500,10 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             tvTitle.setText(marker.getTitle());
             tvTitle.setTextSize(15);
 
-            DummyContent.DummyItem event = markerMap.get(marker);
+            HashMap<String, String> event = markerMap.get(marker);
 
-            tvTopic.setText("~" + event.topic);
-            tvTime.setText(event.start + " Uhr");
+            tvTopic.setText("~" + event.get("topic1"));
+            tvTime.setText(event.get(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART) + " Uhr");
             tvTime.setTextColor(Color.GRAY);
 
             return myContentsView;
