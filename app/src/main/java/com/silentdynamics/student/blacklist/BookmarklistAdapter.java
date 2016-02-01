@@ -52,7 +52,7 @@ public class BookmarklistAdapter extends BaseAdapter implements ListAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.view_event_entry, null);
+            view = inflater.inflate(R.layout.view_bookmarked_entry, null);
         }
 
         //Handle TextView and display string from your list
@@ -65,7 +65,6 @@ public class BookmarklistAdapter extends BaseAdapter implements ListAdapter {
 
         //Handle buttons and add onClickListeners
         Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
-        Button addBtn = (Button)view.findViewById(R.id.edit_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -76,13 +75,6 @@ public class BookmarklistAdapter extends BaseAdapter implements ListAdapter {
                 for (int i = 0; i < eventList.size(); i++){
                     Log.d(TAG, "eventList " + i + ": " + eventList.get(i));
                 }
-                notifyDataSetChanged();
-            }
-        });
-        addBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                //do something
                 notifyDataSetChanged();
             }
         });

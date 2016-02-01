@@ -1,6 +1,5 @@
 package com.silentdynamics.student.blacklist;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -187,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void notifyTime(String eventName) {
-        Toast.makeText(this, eventName + " fängt bald an", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, eventName + " fï¿½ngt bald an", Toast.LENGTH_LONG).show();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

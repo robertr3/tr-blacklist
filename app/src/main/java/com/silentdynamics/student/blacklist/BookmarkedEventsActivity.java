@@ -37,7 +37,7 @@ public class BookmarkedEventsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
+        ArrayList<HashMap<String, String>> eventList =  controller.getBookmarkedEvents();
         for (int i = 0; i < eventList.size(); i++){
             Log.d(TAG, "eventList " + i + ": " + eventList.get(i));
         }
@@ -47,7 +47,7 @@ public class BookmarkedEventsActivity extends AppCompatActivity {
             //Set the Event Array list in ListView
             BookmarklistAdapter eventAdapter = new BookmarklistAdapter(eventList, this);
 
-            ListAdapter adapter = new SimpleAdapter( BookmarkedEventsActivity.this,eventList, R.layout.view_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
+            ListAdapter adapter = new SimpleAdapter( BookmarkedEventsActivity.this,eventList, R.layout.view_bookmarked_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
             ListView myList=(ListView)findViewById(android.R.id.list);
             myList.setAdapter(eventAdapter);
             //Display Sync status of SQLite DB

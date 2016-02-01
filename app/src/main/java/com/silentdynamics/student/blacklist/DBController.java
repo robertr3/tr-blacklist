@@ -120,7 +120,34 @@ public class DBController  extends SQLiteOpenHelper {
             cv.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, "false");
         }
         Log.d(TAG, "privacy: " + privacy);
-        database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id="+id, null);
+        database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id=" + id, null);
+    }
+
+    /**
+     * Changes cachedstatus for given Event
+     */
+    public void switchCached(String id) {
+        Log.d(TAG, "insede switchCached: " + id);
+        String cached = "";
+        String selectQuery = "SELECT " + EventsContract.EventsEntry.COLUMN_NAME_CACHED + " FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE id = '" + id + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                cached = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+
+        ContentValues cv = new ContentValues();
+        if (cached.equals("false")) {
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "true");
+        }
+        else {
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "false");
+        }
+        Log.d(TAG, "cached: " + cached);
+        database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id=" + id, null);
     }
 
     /**
@@ -131,6 +158,64 @@ public class DBController  extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT  * FROM " + EventsContract.EventsEntry.TABLE_NAME;
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID, cursor.getString(0));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, cursor.getString(1));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, cursor.getString(2));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, cursor.getString(3));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, cursor.getString(4));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return wordList;
+    }
+
+    /**
+     * Get list of bookmarkedEvents as Array List
+     * @return
+     */
+    public ArrayList<HashMap<String, String>> getBookmarkedEvents() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE privacy = 'true'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID, cursor.getString(0));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_NAME, cursor.getString(1));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TYPE, cursor.getString(2));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TOPIC, cursor.getString(3));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_TIMESTART, cursor.getString(4));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return wordList;
+    }
+
+    /**
+     * Get list of cachedEvents as Array List
+     * @return
+     */
+    public ArrayList<HashMap<String, String>> getCachedEvents() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE cached = 'true'";
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
