@@ -1,5 +1,6 @@
 package com.silentdynamics.student.blacklist;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -30,8 +34,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -98,8 +106,88 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         BatteryLevelReceiver receiver = new BatteryLevelReceiver();
         registerReceiver(receiver, filter);
+
+        // Timer to check for current events
+        Message msg = new Message();
+        Handler handler = new Handler(new Handler.Callback() {
+
+            @Override
+            public boolean handleMessage(Message msg) {
+                if(msg.arg1==1)
+                {
+                    //Print Toast or open dialog
+                }
+                return false;
+            }
+        });
+
+        Timer updateTimer = new Timer();
+        updateTimer.schedule(new TimerTask() {
+            public static final String PREFS_NAME = "MyPrefsFile";
+            ArrayList<String> alreadyNotified = new ArrayList<>();
+
+            public void run() {
+                try {
+
+                    SharedPreferences settings = MainActivity.this.getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    SimpleDateFormat format = new SimpleDateFormat("HH-mm");
+
+                    Date systemTime = new Date();
+                    String myDate = format.format(systemTime);
+                    systemTime = format.parse(myDate);
+
+                    Date eventTime = new Date();
+
+                    ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
+                    for (int i = 0; i < eventList.size(); i++){
+                        eventTime  = format.parse(eventList.get(i).get("timestart"));
+                        long mills = eventTime.getTime() - systemTime.getTime();
+                        int Hours = (int) (mills / (1000 * 60 * 60));
+                        int Mins = (int) (mills / (1000 * 60)) % 60;
+                        String diff = Hours + ":" + Mins; // updated value every1 second
+                        Log.d(TAG, "i: " + diff);
+                        if(Hours == 0){
+                            if(alreadyNotified.contains(eventList.get(i).get("name")) == false) {
+                                alreadyNotified.add(eventList.get(i).get("name"));
+                                editor.putString("CurrentEvent", eventList.get(i).get("name"));
+                                editor.commit();
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SharedPreferences settings = getSharedPreferences(BatteryLevelReceiver.PREFS_NAME, 0);
+                                        if (settings.contains("BatterySafe")) {
+                                            String event = settings.getString("CurrentEvent", "");
+                                            Toast.makeText(MainActivity.this, event + " faengt bald an", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+
+                    long mills = systemTime.getTime() - eventTime.getTime();
+                    Log.v("Data1", "" + systemTime.getTime());
+                    Log.v("Data2", "" + eventTime.getTime());
+                    int Hours = (int) (mills / (1000 * 60 * 60));
+                    int Mins = (int) (mills / (1000 * 60)) % 60;
+
+                    String diff = Hours + ":" + Mins; // updated value every1 second
+                    //txtCurrentTime.setText(diff);
+                    Log.d(TAG, diff);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, 0, 2000);
     }
 
+    public void notifyTime(String eventName) {
+        Toast.makeText(this, eventName + " fängt bald an", Toast.LENGTH_LONG).show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -110,7 +110,8 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
                                            int pos, long id) {
                 // TODO Auto-generated method stub
 
-                Log.v("long clicked","pos: " + pos);
+                Log.v("long clicked", mListView.getItemAtPosition(pos).toString());
+                Object o = mListView.getItemAtPosition(pos);
 
                 return true;
             }
@@ -118,7 +119,8 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView.setLongClickable(true);
         // ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
-        ListAdapter adapter = new SimpleAdapter(getActivity(), events, R.layout.find_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
+        ListAdapter adapter = new SimpleAdapter(getActivity(), events, R.layout.find_event_entry, new String[] { "id","name","topic1","timestart"},
+                new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic, R.id.eventTime});
         ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
 
         this.filter("Kein Filter");
