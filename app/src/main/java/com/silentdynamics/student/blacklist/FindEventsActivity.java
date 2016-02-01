@@ -77,8 +77,6 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
 
-        new GeocoderTask().execute("Comeniusstraße Dresden, Deutschland");
-
         // Create an instance of GoogleAPIClient
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -429,6 +427,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
             Marker marker = mMap.addMarker(o);
             markerMap.put(marker,item);
         }
+
+        // new GeocoderTask().execute("Comeniusstraße Dresden, Deutschland");
     }
 
     public void onFragmentInteraction(String id){
@@ -493,7 +493,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     // An AsyncTask class for accessing the GeoCoding Web Service
-    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+    public class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
 
         @Override
         protected List<Address> doInBackground(String... locationName) {

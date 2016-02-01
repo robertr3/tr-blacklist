@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         int Hours = (int) (mills / (1000 * 60 * 60));
                         int Mins = (int) (mills / (1000 * 60)) % 60;
                         String diff = Hours + ":" + Mins; // updated value every1 second
-                        Log.d(TAG, "i: " + diff);
                         if(Hours == 0){
                             if(alreadyNotified.contains(eventList.get(i).get("name")) == false) {
                                 alreadyNotified.add(eventList.get(i).get("name"));
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
 
-                    long mills = systemTime.getTime() - eventTime.getTime();
+                    /*long mills = systemTime.getTime() - eventTime.getTime();
                     Log.v("Data1", "" + systemTime.getTime());
                     Log.v("Data2", "" + eventTime.getTime());
                     int Hours = (int) (mills / (1000 * 60 * 60));
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     String diff = Hours + ":" + Mins; // updated value every1 second
                     //txtCurrentTime.setText(diff);
-                    Log.d(TAG, diff);
+                    Log.d(TAG, diff);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
