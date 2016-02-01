@@ -77,6 +77,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
 
+        new GeocoderTask().execute("Comeniusstraße Dresden, Deutschland");
+
         // Create an instance of GoogleAPIClient
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -92,17 +94,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        /*if(checkPositionPermission() == true) {
-            Location loc = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-            if (loc == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            }
-            else {
-                userPosition = new LatLng(loc.getLatitude(), loc.getLongitude());
-            }
-
-        }*/
+        userPosition = new LatLng(51.0431384, 13.7667263);
 
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(BatteryLevelReceiver.PREFS_NAME, 0);
@@ -536,20 +528,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
                 // Creating an instance of GeoPoint, to display in Google Map
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                String addressText = String.format("%s, %s",
-                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                        address.getCountryName());
-
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(addressText);
-
-                //googleMap.addMarker(markerOptions);
-
-                // Locate the first location
-                if(i==0) {
-                    //googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                }
+                Log.d("Adresse", latLng.toString());
             }
         }
     }
