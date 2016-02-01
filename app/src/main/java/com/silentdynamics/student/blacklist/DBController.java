@@ -35,7 +35,7 @@ public class DBController  extends SQLiteOpenHelper {
                 EventsContract.EventsEntry.COLUMN_NAME_LOCATION + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_PRIVACY + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_USERNAME + " TEXT," +
-                EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT)" +
+                EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_CACHED + " TEXT)";
         database.execSQL(query);
     }
@@ -69,6 +69,7 @@ public class DBController  extends SQLiteOpenHelper {
     }
 
     /**
+     * debrecated! use deleteEvent(id)
      * Delets first Event from SQLite DB
      */
     public void deleteEvent() {
@@ -90,7 +91,7 @@ public class DBController  extends SQLiteOpenHelper {
      */
     public void deleteEvent(String id) {
         SQLiteDatabase database = this.getWritableDatabase();
-        Log.d(TAG, "insede deleteSpecificEvent: " + id);
+        Log.d(TAG, "inside deleteSpecificEvent: " + id);
         database.delete(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID + "=" + id, null);
     }
 
@@ -151,6 +152,58 @@ public class DBController  extends SQLiteOpenHelper {
     }
 
     /**
+     * Changes cachedstatus for given Event to true
+     */
+    public void putCached(String id) {
+        Log.d(TAG, "insede putCached: " + id);
+        String cached = "";
+        String selectQuery = "SELECT " + EventsContract.EventsEntry.COLUMN_NAME_CACHED + " FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE id = '" + id + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                cached = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+
+        ContentValues cv = new ContentValues();
+        if (cached.equals("false")) {
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "true");
+            database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id=" + id, null);
+        }
+        else {
+            Log.d(TAG, "allready cached! " + cached);
+        }
+    }
+
+    /**
+     * Changes cachedstatus for given Event to false
+     */
+    public void removeCached(String id) {
+        Log.d(TAG, "insede removeCached: " + id);
+        String cached = "";
+        String selectQuery = "SELECT " + EventsContract.EventsEntry.COLUMN_NAME_CACHED + " FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE id = '" + id + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                cached = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+
+        ContentValues cv = new ContentValues();
+        if (cached.equals("true")) {
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "false");
+            database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id=" + id, null);
+        }
+        else {
+            Log.d(TAG, "allready not cached! " + cached);
+        }
+    }
+
+    /**
      * Get list of Users from SQLite DB as Array List
      * @return
      */
@@ -171,7 +224,7 @@ public class DBController  extends SQLiteOpenHelper {
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(9));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -200,7 +253,7 @@ public class DBController  extends SQLiteOpenHelper {
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(9));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -229,7 +282,7 @@ public class DBController  extends SQLiteOpenHelper {
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
-                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(9));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }

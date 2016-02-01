@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -36,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -146,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         int Hours = (int) (mills / (1000 * 60 * 60));
                         int Mins = (int) (mills / (1000 * 60)) % 60;
                         String diff = Hours + ":" + Mins; // updated value every1 second
-                        if(Hours == 0){
+                        if(Hours <= 0){
                             if(alreadyNotified.contains(eventList.get(i).get("name")) == false) {
                                 alreadyNotified.add(eventList.get(i).get("name"));
                                 editor.putString("CurrentEvent", eventList.get(i).get("name"));
@@ -163,7 +167,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 });
                             }
                         }
+                        Log.d(TAG, "PlusTime: " + Hours + ":" + Mins);
+                        if(Hours <= 0 && Mins <= 0){
+                            String id = eventList.get(i).get(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID);
+                            Log.d(TAG, "MinusTime: " + Hours + ":" + Mins);
+                            controller.deleteEvent(id);
+                        }
                     }
+
+                    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        Geocoder geocoder = new Geocoder(getBaseContext());
+                        String adr = "";
+                        String id = "";
+                        List<Address> addresses = null;
+                        for (int i = 0; i < eventList.size(); i++){
+                            adr = eventList.get(i).get(EventsContract.EventsEntry.COLUMN_NAME_LOCATION);
+                            id = eventList.get(i).get(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID);
+                            addresses = geocoder.getFromLocationName(adr, 1);
+                            double lat = addresses.get(0).getLatitude();
+                            double lon = addresses.get(0).getLongitude();
+                            Location locAddress = new Location("dest");
+                            locAddress.setLatitude(lat);
+                            locAddress.setLongitude(lon);
+                            Location locCurrent = new Location("start");
+                            locCurrent.setLatitude(51.0257543);
+                            locCurrent.setLongitude(13.7206226);
+                            float dist = locAddress.distanceTo(locCurrent);
+                            Log.d(TAG, "lat: " + lat + "lon: " + lon + "dist:" + dist);
+                            if (dist < 10000){
+                                controller.putCached(id);
+                            }
+                        }
+                    } else {
+                    }
+                    //Log.d(TAG, controller.getCachedEvents().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

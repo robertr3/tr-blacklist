@@ -197,6 +197,7 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
             queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, locationE);
             queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, privacy);
             queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, username);
+            queryValues.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "false");
             controller.insertEvent(queryValues);
             // Invoke RESTful Web Service with Http parameters
             invokeWS(params);

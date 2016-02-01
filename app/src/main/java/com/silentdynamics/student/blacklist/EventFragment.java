@@ -87,6 +87,7 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
 
         dbc = new DBController(getActivity());
         eventList =  dbc.getAllEvents();
+        Log.d("events", eventList.toString());
         events = new ArrayList<HashMap<String, String>>();
 
         //mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),

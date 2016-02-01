@@ -424,6 +424,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnInfoWindowClickListener(this);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         markerMap.clear();
         mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         LatLng latLng;
