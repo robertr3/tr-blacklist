@@ -6,9 +6,14 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,10 +38,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FindEventsActivity extends FragmentActivity implements OnMapReadyCallback, EventFragment.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, AdapterView.OnItemSelectedListener,
@@ -54,6 +67,9 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     EventFragment listFragment;
 
     List<DummyContent.DummyItem> events;
+    ArrayList<HashMap<String, String>> eventList;
+    DBController dbc = new DBController(this);
+    private Map<Marker, DummyContent.DummyItem> markerMap = new HashMap<>();
     Button[] btns;
 
     @Override
@@ -98,6 +114,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
         // Get the dummy events
         events = DummyContent.ITEMS;
+        eventList =  dbc.getAllEvents();
 
         // Create the spinner
         Spinner spinner = (Spinner) findViewById(R.id.topics_spinner);
@@ -112,8 +129,15 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         // Create the TagCloud
-        String[] topics = getResources().getStringArray(R.array.topics_array);
+        Collection<String> allTopics = new ArrayList<String>();
+        allTopics.addAll(Arrays.asList(getResources().getStringArray(R.array.topics_array)));
+        allTopics.addAll(Arrays.asList(getResources().getStringArray(R.array.topicsMovie_array)));
+
+        String[] topics = allTopics.toArray(new String[] {});
+        //String[] topics = getResources().getStringArray(R.array.topics_array);
         btns = new Button[topics.length];
+
+
 
         int tagID = 0;
 
@@ -310,6 +334,7 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             // clear all Markers
             mMap.clear();
+            markerMap.clear();
 
             // Add new ones according to filter
             for (DummyContent.DummyItem item : events) {
@@ -318,10 +343,10 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
                     MarkerOptions o = new MarkerOptions()
                             .position(latLng)
-                            .title(item.content);
+                            .title(item.name);
 
-                    mMap.addMarker(o);
-
+                    Marker marker = mMap.addMarker(o);
+                    markerMap.put(marker,item);
                 }
             }
         }
@@ -398,6 +423,8 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        markerMap.clear();
+        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
         LatLng latLng;
 
         for(DummyContent.DummyItem item : events) {
@@ -405,12 +432,11 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
 
             MarkerOptions o = new MarkerOptions()
                     .position(latLng)
-                    .title(item.content);
+                    .title(item.name);
 
-            mMap.addMarker(o);
+            Marker marker = mMap.addMarker(o);
+            markerMap.put(marker,item);
         }
-        //mMap.addMarker(new MarkerOptions().position(userPosition).title("Marker at user position"));
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(userPosition));
     }
 
     public void onFragmentInteraction(String id){
@@ -437,5 +463,94 @@ public class FindEventsActivity extends FragmentActivity implements OnMapReadyCa
         Button b = (Button)v;
         String buttonText = b.getText().toString();
         handleNewFilter(buttonText);
+    }
+
+    class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyInfoWindowAdapter(){
+            myContentsView = getLayoutInflater().inflate(R.layout.custom_info_contents, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
+            TextView tvTopic = ((TextView)myContentsView.findViewById(R.id.topic));
+            TextView tvTime = ((TextView)myContentsView.findViewById(R.id.time));
+
+            tvTitle.setText(marker.getTitle());
+            tvTitle.setTextSize(15);
+
+            DummyContent.DummyItem event = markerMap.get(marker);
+
+            tvTopic.setText("~" + event.topic);
+            tvTime.setText(event.start + " Uhr");
+            tvTime.setTextColor(Color.GRAY);
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+    }
+
+    // An AsyncTask class for accessing the GeoCoding Web Service
+    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+
+        @Override
+        protected List<Address> doInBackground(String... locationName) {
+            // Creating an instance of Geocoder class
+            Geocoder geocoder = new Geocoder(getBaseContext());
+            List<Address> addresses = null;
+
+            try {
+                // Getting a maximum of 3 Address that matches the input text
+                addresses = geocoder.getFromLocationName(locationName[0], 3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return addresses;
+        }
+
+        @Override
+        protected void onPostExecute(List<Address> addresses) {
+
+            if(addresses==null || addresses.size()==0){
+                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
+            }
+
+            // Clears all the existing markers on the map
+            //googleMap.clear();
+
+            // Adding Markers on Google Map for each matching address
+            for(int i=0;i<addresses.size();i++){
+
+                Address address = (Address) addresses.get(i);
+
+                // Creating an instance of GeoPoint, to display in Google Map
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                String addressText = String.format("%s, %s",
+                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+                        address.getCountryName());
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(addressText);
+
+                //googleMap.addMarker(markerOptions);
+
+                // Locate the first location
+                if(i==0) {
+                    //googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                }
+            }
+        }
     }
 }

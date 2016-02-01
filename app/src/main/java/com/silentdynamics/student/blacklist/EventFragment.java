@@ -12,11 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.silentdynamics.student.blacklist.dummy.DummyContent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,7 +55,11 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
      */
     private ListAdapter mAdapter;
 
-    private List<DummyContent.DummyItem> events = new ArrayList<DummyContent.DummyItem>();
+    //private List<DummyContent.DummyItem> events = new ArrayList<DummyContent.DummyItem>();
+    ArrayList<HashMap<String, String>> eventList;
+    ArrayList<HashMap<String, String>> events;
+    DBController dbc;
+    EventlistAdapter eventAdapter;
 
     // TODO: Rename and change types of parameters
     public static EventFragment newInstance(String param1, String param2) {
@@ -80,9 +87,13 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        dbc = new DBController(getActivity());
+        eventList =  dbc.getAllEvents();
+        events = new ArrayList<HashMap<String, String>>();
 
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, events);
+        //mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+               //android.R.layout.simple_list_item_1, android.R.id.text1, events);
+        //eventAdapter = new EventlistAdapter(events, getActivity());
     }
 
     @Override
@@ -90,9 +101,25 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
 
+
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                // TODO Auto-generated method stub
+
+                Log.v("long clicked","pos: " + pos);
+
+                return true;
+            }
+        });
+        mListView.setLongClickable(true);
+        // ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+
+        ListAdapter adapter = new SimpleAdapter(getActivity(), events, R.layout.find_event_entry, new String[] { "id","name","topic1"}, new int[] {R.id.eventId, R.id.eventName, R.id.eventTopic});
+        ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
 
         this.filter("Kein Filter");
 
@@ -103,10 +130,17 @@ public class EventFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     public void filter(String filter) {
+        //ArrayList<HashMap<String, String>> eventis = new ArrayList<HashMap<String, String>>();
         events.clear();
-         for (DummyContent.DummyItem item : DummyContent.ITEMS) {
+         /*for (DummyContent.DummyItem item : DummyContent.ITEMS) {
             if (item.topic.equals(filter) || filter.equals("Kein Filter")) {
                 events.add(item);
+            }
+         }*/
+
+        for (int i = 0; i < eventList.size(); i++){
+            if(eventList.get(i).get("topic1").equals(filter) || filter.equals("Kein Filter")) {
+                events.add(eventList.get(i));
             }
         }
 

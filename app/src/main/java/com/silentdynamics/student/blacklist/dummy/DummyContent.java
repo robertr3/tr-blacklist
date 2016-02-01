@@ -1,6 +1,9 @@
 package com.silentdynamics.student.blacklist.dummy;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +27,13 @@ public class DummyContent {
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
     static {
+        //SimpleDateFormat ft = new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
+        //Date d = new Date(ft.parse());
         // Add 3 sample items.
-        addItem(new DummyItem("1", "Item 1", "Fußball", 51.0389224, 13.7598763));
-        addItem(new DummyItem("2", "Item 2", "Fußball", 51.0431384, 13.7667263));
-        addItem(new DummyItem("3", "Item 3", "Politik", 51.0313414, 13.7766913));
-        addItem(new DummyItem("4", "Item 3", "Politik", 51.0413414, 13.7666913));
+        addItem(new DummyItem("1", "Best Event ever", "Fußball", 51.0389224, 13.7598763, "18:30"));
+        addItem(new DummyItem("2", "Spieleabend", "Fußball", 51.0431384, 13.7667263, "20:00"));
+        addItem(new DummyItem("3", "Sauftour", "Politik", 51.0313414, 13.776691, "20:30"));
+        addItem(new DummyItem("4", "Party!! yay", "Politik", 51.0413414, 13.7666913, "21:15"));
     }
 
     private static void addItem(DummyItem item) {
@@ -41,22 +46,24 @@ public class DummyContent {
      */
     public static class DummyItem {
         public String id;
-        public String content;
+        public String name;
         public String topic;
         public double lat;
         public double lng;
+        public String start;
 
-        public DummyItem(String id, String content, String topic, double lat, double lng) {
+        public DummyItem(String id, String name, String topic, double lat, double lng, String start) {
             this.id = id;
-            this.content = content;
+            this.name = name;
             this.topic = topic;
             this.lat = lat;
             this.lng = lng;
+            this.start = start;
         }
 
         @Override
         public String toString() {
-            return content;
+            return name;
         }
     }
 }
