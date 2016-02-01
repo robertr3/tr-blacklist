@@ -33,9 +33,10 @@ public class DBController  extends SQLiteOpenHelper {
                 EventsContract.EventsEntry.COLUMN_NAME_TOPIC + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_TIMESTART + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_LOCATION + " TEXT," +
-                EventsContract.EventsEntry.COLUMN_NAME_PRIVACY + " TINYINT," +
+                EventsContract.EventsEntry.COLUMN_NAME_PRIVACY + " TEXT," +
                 EventsContract.EventsEntry.COLUMN_NAME_USERNAME + " TEXT," +
-                EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT)";
+                EventsContract.EventsEntry.COLUMN_NAME_UPDATE + " TEXT)" +
+                EventsContract.EventsEntry.COLUMN_NAME_CACHED + " TEXT)";
         database.execSQL(query);
     }
     @Override
@@ -62,6 +63,7 @@ public class DBController  extends SQLiteOpenHelper {
         values.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, queryValues.get(EventsContract.EventsEntry.COLUMN_NAME_USERNAME));
         values.put(EventsContract.EventsEntry.COLUMN_NAME_UPDATE, "no");
+        values.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, "false");
         database.insert(EventsContract.EventsEntry.TABLE_NAME, EventsContract.EventsEntry.COLUMN_NAME_TOPIC, values);
         database.close();
     }
@@ -93,6 +95,35 @@ public class DBController  extends SQLiteOpenHelper {
     }
 
     /**
+     * Changes bookmarkstatus for given Event
+     */
+    public void switchBookmark(String id) {
+        Log.d(TAG, "insede switchBookmark: " + id);
+        String privacy = "";
+        String selectQuery = "SELECT privacy FROM " + EventsContract.EventsEntry.TABLE_NAME + " WHERE id = '" + id + "'";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                privacy = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+
+        ContentValues cv = new ContentValues();
+        if (privacy.equals("false")) {
+            Log.d(TAG, "inside false");
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, "true");
+        }
+        else {
+            Log.d(TAG, "inside true");
+            cv.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, "false");
+        }
+        Log.d(TAG, "privacy: " + privacy);
+        database.update(EventsContract.EventsEntry.TABLE_NAME, cv, "id="+id, null);
+    }
+
+    /**
      * Get list of Users from SQLite DB as Array List
      * @return
      */
@@ -113,6 +144,7 @@ public class DBController  extends SQLiteOpenHelper {
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_LOCATION, cursor.getString(5));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_PRIVACY, cursor.getString(6));
                 map.put(EventsContract.EventsEntry.COLUMN_NAME_USERNAME, cursor.getString(7));
+                map.put(EventsContract.EventsEntry.COLUMN_NAME_CACHED, cursor.getString(8));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }

@@ -40,6 +40,16 @@
         android:layout_marginTop="25dp"
         android:onClick="navigateToFindEventsActivity" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bookmarks_events"
+        android:id="@+id/bookmarkedEventsButton"
+        android:layout_below="@+id/textWelcome"
+        android:layout_toRightOf="@+id/findEventsButton"
+        android:layout_marginTop="25dp"
+        android:onClick="navigateToBookmarkedEventsActivity" />
+
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"

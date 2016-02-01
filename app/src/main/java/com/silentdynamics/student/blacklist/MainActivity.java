@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Display Sync status of SQLite DB
             Toast.makeText(getApplicationContext(), controller.getSyncStatus(), Toast.LENGTH_LONG).show();
         }
+
         //Initialize Progress Dialog properties
         prgDialog = new ProgressDialog(this);
         prgDialog.setMessage("Synching SQLite Data with Remote MySQL DB. Please wait...");
@@ -213,6 +214,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(findEventIntent);
     }
+
+    public void navigateToBookmarkedEventsActivity(View view){
+        Intent bookmarkedEventIntent = new Intent(getApplicationContext(),BookmarkedEventsActivity.class);
+        bookmarkedEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(bookmarkedEventIntent);
+    }
+
     public void deleteFirstEvent(View view){
         controller.deleteEvent();
         ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();

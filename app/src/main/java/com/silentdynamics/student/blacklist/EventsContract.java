@@ -21,5 +21,14 @@ public final class EventsContract {
         public static final String COLUMN_NAME_PRIVACY = "privacy";
         public static final String COLUMN_NAME_USERNAME = "username";
         public static final String COLUMN_NAME_UPDATE = "updateStatus";
+        public static final String COLUMN_NAME_CACHED = "cached";
+    }
+
+    public static abstract class EventsCached implements BaseColumns {
+        public static final String TABLE_NAME = "eventscached";
+        public static final String COLUMN_NAME_CACHED_ID = "id";
+        public static final String COLUMN_NAME_ENTRY_ID = "id";
+        public static final String COLUMN_NAME_UPDATE = "updateStatus";
+        public static final String COLUMN_NAME_CACHE = "cached";
     }
 }

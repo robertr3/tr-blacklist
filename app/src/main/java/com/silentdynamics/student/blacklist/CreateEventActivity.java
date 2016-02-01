@@ -166,7 +166,8 @@ public class CreateEventActivity extends AppCompatActivity implements AdapterVie
         // Get startTime ET control value
         String startTime = (String) timeTextView.getText();
         // Get privacy Switch value
-        String privacy = String.valueOf(privacyE.isChecked());
+      //  String privacy = String.valueOf(privacyE.isChecked());
+        String privacy = "false";
         Log.d(TAG, "privacy: " + privacy);
         // Get username
         String username = Utility.getUsername();

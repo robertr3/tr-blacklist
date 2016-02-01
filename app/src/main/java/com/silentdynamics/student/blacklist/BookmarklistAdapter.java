@@ -14,17 +14,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Student on 31.01.2016.
+ * Created by Student on 01.02.2016.
  */
-public class EventlistAdapter extends BaseAdapter implements ListAdapter{
-    private static final String TAG = EventlistAdapter.class.getSimpleName();
-    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+public class BookmarklistAdapter extends BaseAdapter implements ListAdapter {
+    private static final String TAG = BookmarklistAdapter.class.getSimpleName();
+    private ArrayList<HashMap<String, String>> bookmarklist = new ArrayList<HashMap<String, String>>();
     private Context context;
     DBController controller;
 
 
-    public EventlistAdapter(ArrayList<HashMap<String, String>> list, Context context) {
-        this.list = list;
+    public BookmarklistAdapter(ArrayList<HashMap<String, String>> list, Context context) {
+        this.bookmarklist = list;
         this.context = context;
         controller = new DBController(context);
 
@@ -32,17 +32,17 @@ public class EventlistAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public int getCount() {
-        return list.size();
+        return bookmarklist.size();
     }
 
     @Override
     public Object getItem(int pos) {
-        return list.get(pos);
+        return bookmarklist.get(pos);
     }
 
     @Override
     public long getItemId(int pos) {
-      //  return list.get(pos).getId();
+        //  return list.get(pos).getId();
         //just return 0 if your list items do not have an Id variable.
         return 0;
     }
@@ -59,9 +59,9 @@ public class EventlistAdapter extends BaseAdapter implements ListAdapter{
         TextView eventId = (TextView)view.findViewById(R.id.eventId);
         TextView eventName = (TextView) view.findViewById(R.id.eventName);
         TextView eventTopic = (TextView)view.findViewById(R.id.eventTopic);
-        eventId.setText(list.get(position).get("id"));
-        eventName.setText(list.get(position).get("name"));
-        eventTopic.setText(list.get(position).get("topic1"));
+        eventId.setText(bookmarklist.get(position).get("id"));
+        eventName.setText(bookmarklist.get(position).get("name"));
+        eventTopic.setText(bookmarklist.get(position).get("topic1"));
 
         //Handle buttons and add onClickListeners
         Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
@@ -70,8 +70,8 @@ public class EventlistAdapter extends BaseAdapter implements ListAdapter{
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                controller.deleteEvent(list.get(position).get("id"));
-                list.remove(position);
+                controller.switchBookmark(bookmarklist.get(position).get("id"));
+                bookmarklist.remove(position);
                 ArrayList<HashMap<String, String>> eventList =  controller.getAllEvents();
                 for (int i = 0; i < eventList.size(); i++){
                     Log.d(TAG, "eventList " + i + ": " + eventList.get(i));
@@ -82,7 +82,7 @@ public class EventlistAdapter extends BaseAdapter implements ListAdapter{
         addBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                controller.switchBookmark(list.get(position).get("id"));
+                //do something
                 notifyDataSetChanged();
             }
         });

@@ -22,11 +22,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".registration.RegisterActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".registration.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -43,18 +42,23 @@
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        --> <!--   android:name="com.google.android.geo.API_KEY"-->
+        -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
             android:name=".FindEventsActivity"
-            android:label="@string/title_activity_find_events"></activity>
+            android:label="@string/title_activity_find_events" />
         <activity
             android:name=".CreateEventActivity"
             android:label="@string/title_activity_create_event"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BookmarkedEventsActivity"
+            android:label="@string/title_activity_bookmarked_events"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
-    </manifest>
+</manifest>
