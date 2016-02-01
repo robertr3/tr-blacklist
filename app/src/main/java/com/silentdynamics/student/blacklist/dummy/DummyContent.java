@@ -30,10 +30,10 @@ public class DummyContent {
         //SimpleDateFormat ft = new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
         //Date d = new Date(ft.parse());
         // Add 3 sample items.
-        addItem(new DummyItem("1", "Best Event ever", "Fußball", 51.0389224, 13.7598763, "18:30", "22:00"));
-        addItem(new DummyItem("2", "Spieleabend", "Fußball", 51.0431384, 13.7667263, "20:00", "24:00"));
-        addItem(new DummyItem("3", "Sauftour", "Politik", 51.0313414, 13.776691, "20:30", "0:30"));
-        addItem(new DummyItem("4", "Party!! yay", "Politik", 51.0413414, 13.7666913, "21:15", "02:00"));
+        addItem(new DummyItem("1", "Best Event ever", "Fußball", 51.0389224, 13.7598763, "18:30"));
+        addItem(new DummyItem("2", "Spieleabend", "Fußball", 51.0431384, 13.7667263, "20:00"));
+        addItem(new DummyItem("3", "Sauftour", "Politik", 51.0313414, 13.776691, "20:30"));
+        addItem(new DummyItem("4", "Party!! yay", "Politik", 51.0413414, 13.7666913, "21:15"));
     }
 
     private static void addItem(DummyItem item) {
@@ -51,16 +51,14 @@ public class DummyContent {
         public double lat;
         public double lng;
         public String start;
-        public String end;
 
-        public DummyItem(String id, String name, String topic, double lat, double lng, String start, String end) {
+        public DummyItem(String id, String name, String topic, double lat, double lng, String start) {
             this.id = id;
             this.name = name;
             this.topic = topic;
             this.lat = lat;
             this.lng = lng;
             this.start = start;
-            this.end = end;
         }
 
         @Override
