@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         int Hours = (int) (mills / (1000 * 60 * 60));
                         int Mins = (int) (mills / (1000 * 60)) % 60;
                         String diff = Hours + ":" + Mins; // updated value every1 second
-                        if(Hours == 0){
+                        if(Hours <= 0){
                             if(alreadyNotified.contains(eventList.get(i).get("name")) == false) {
                                 alreadyNotified.add(eventList.get(i).get("name"));
                                 editor.putString("CurrentEvent", eventList.get(i).get("name"));
@@ -166,6 +166,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 });
                             }
+                        }
+                        Log.d(TAG, "PlusTime: " + Hours + ":" + Mins);
+                        if(Hours <= 0 && Mins <= 0){
+                            String id = eventList.get(i).get(EventsContract.EventsEntry.COLUMN_NAME_ENTRY_ID);
+                            Log.d(TAG, "MinusTime: " + Hours + ":" + Mins);
+                            controller.deleteEvent(id);
                         }
                     }
 
